@@ -10,12 +10,6 @@ class Board
 
   end
 
-  def color_board
-    board.each_with_index do |row, row_idx|
-      row.map!.with_index { |el, col_idx| (row_idx + col_idx).even? ? "\e[47m" : "\e[40m" }
-    end
-  end
-
   def display_board
     board.each_with_index do |row, row_idx|
       print "#{8 - row_idx}"
