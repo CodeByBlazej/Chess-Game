@@ -5,11 +5,23 @@ class Game
   attr_reader :board
 
   def initialize
-    @board = Board.new(Array.new(8) { Array.new(8) })
+    @board = Board.new
 
   end
 
   def play_game
+    introduction
+    create_players
     board.display_board
+  end
+
+  def introduction
+    puts <<~HEREDOC
+      
+    Welcome to the Chess!
+
+    Please select players names!
+
+    HEREDOC
   end
 end
