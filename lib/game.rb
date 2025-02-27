@@ -1,5 +1,6 @@
 require_relative 'game/players'
 require_relative 'game/board'
+require_relative 'game/knight'
 
 class Game
   attr_reader :board, :player1_name, :player2_name, :player1, :player2
