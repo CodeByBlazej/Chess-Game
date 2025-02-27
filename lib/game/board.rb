@@ -1,13 +1,13 @@
 require_relative '../game'
 
 class Board
-  attr_reader :board, :white, :black
+  attr_reader :board, :white, :black, :knight
 
   def initialize 
     @board = Array.new(8) { Array.new(8, '  ') }
     @white = "\e[0;100m"
     @black = "\e[40m"
-    @knight = Knight.new
+    @knight = Knight.new 
   end
 
   def display_board
