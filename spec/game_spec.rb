@@ -6,7 +6,10 @@ describe Game do
   describe '#create_players' do
     
     before do
-      allow(game).to receive(:gets)  
+      player1_name = 'Tim'
+      player2_name = 'Rob'
+      allow(game).to receive(:gets).and_return(player1_name, player2_name)
+      allow(game).to receive(:puts)
     end
 
     it 'asks for names and creates 2 objects' do
