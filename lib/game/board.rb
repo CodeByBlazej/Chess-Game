@@ -5,13 +5,13 @@ class Board
 
   def initialize 
     @board = Array.new(8) { Array.new(8, '  ') }
-    @white = "\e[47m"
+    @white = "\e[0;100m"
     @black = "\e[40m"
-
+    @knight = Knight.new
   end
 
   def display_board
-    board.each_with_index do |row, row_idx|
+    board.rotate.each_with_index do |row, row_idx|
       print "#{8 - row_idx}"
       
       row.each_with_index do |cell, col_idx|
