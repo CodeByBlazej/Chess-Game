@@ -15,6 +15,7 @@ class Game
     create_players
     play_round
     board.display_board
+    board.name_cells
   end
 
   def create_players
