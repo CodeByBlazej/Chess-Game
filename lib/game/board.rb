@@ -10,7 +10,7 @@ class Board
     @knight = Knight.new 
     @cell_names = {}
   end
-  
+
   def display_board
     board.rotate.each_with_index do |row, row_idx|
       print "#{8 - row_idx}"
@@ -28,11 +28,12 @@ class Board
   def name_cells
     alphabet = ('A'..'H').to_a
 
-    board.board.each_with_index do |row, row_idx|
+    board.each_with_index do |row, row_idx|
       row.each_with_index do |cell, col_idx|
-        cell_names[]
+        cell_names["#{alphabet[col_idx]}#{[row_idx + 1]}"] = [row_idx, col_idx]
       end
     end
+    puts cell_names
   end
 
 end
