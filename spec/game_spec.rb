@@ -2,6 +2,8 @@ require_relative '../lib/game'
 
 describe Game do
   subject(:game) { described_class.new }
+  let(:board) { instance_double(Board) }
+  let(:knight) { instance_double(Knight, color: 'white', symbol: "\u2658 ")}
 
   describe '#create_players' do
     
@@ -18,5 +20,16 @@ describe Game do
     end
   end
 
-  describe '#create_chesspieces' 
+  describe '#create_chesspieces' do
+
+    before do
+      allow(board).to receive(:display_board)
+    end
+    it 'adds white chess pieces to the board' do
+      game.create_chesspieces
+      expect(game.board.board[0][1]).to eq(knight.symbol)
+    end
+  end
+
+
 end
