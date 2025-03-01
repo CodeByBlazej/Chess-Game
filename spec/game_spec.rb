@@ -17,4 +17,6 @@ describe Game do
       game.create_players 
     end
   end
+
+  describe '#create_chesspieces' 
 end
