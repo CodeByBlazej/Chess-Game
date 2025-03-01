@@ -7,7 +7,7 @@ class Board
     @board = Array.new(8) { Array.new(8, '  ') }
     @white = "\e[0;100m"
     @black = "\e[40m"
-    @knight = Knight.new 
+    @knight = Knight.new('white', "\u2658 ")
     @cell_names = {}
   end
 
@@ -32,7 +32,7 @@ class Board
 
     board.each_with_index do |row, row_idx|
       row.each_with_index do |cell, col_idx|
-        cell_names["#{alphabet[col_idx]}#{row_idx + 1}"] = [col_idx, row_idx]
+        cell_names["#{alphabet[col_idx]}#{row_idx + 1}"] = [row_idx, col_idx]
       end
     end
     # puts cell_names
