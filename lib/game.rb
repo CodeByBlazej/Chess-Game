@@ -16,6 +16,7 @@ class Game
     play_round
     board.display_board
     # board.name_cells
+    # create chesspieces - colors and their coordinates
   end
 
   def create_players
