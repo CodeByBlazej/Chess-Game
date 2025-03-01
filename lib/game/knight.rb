@@ -6,8 +6,7 @@ class Knight
   def initialize color, symbol
     @color = color
     @symbol = symbol
-    @starting_position = 
-    @current_position = 
+    @starting_position = nil
+    @current_position = nil
   end
-
 end
