@@ -1,6 +1,7 @@
 require_relative 'game/players'
 require_relative 'game/board'
 require_relative 'game/knight'
+require 'pry-byebug'
 
 class Game
   attr_reader :board, :player1_name, :player2_name, :player1, :player2
@@ -15,7 +16,10 @@ class Game
     create_players
     play_round
     board.display_board
+    puts board.board[0][1]
+    puts board.board[1][0]
     # board.name_cells
+    create_chesspieces
     # create chesspieces - colors and their coordinates
   end
 
@@ -29,8 +33,13 @@ class Game
     @player2 = Players.new(player2_name)
   end
 
+  def create_chesspieces
+    # binding.pry
+    board.board[0][1] = board.knight.symbol
+  end
+
   def play_round
-    board.board[0][1] = "\u2655 "
+    board.board[0][0] = "\u2655 "
     board.board[0][2] = "\u265A "
     board.board[0][3] = "\u2654 "
     board.board[0][5] = "\u265A "
