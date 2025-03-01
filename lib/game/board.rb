@@ -12,6 +12,8 @@ class Board
   end
 
   def display_board
+    name_cells
+
     board.rotate.each_with_index do |row, row_idx|
       print "#{8 - row_idx}"
       
@@ -30,10 +32,10 @@ class Board
 
     board.each_with_index do |row, row_idx|
       row.each_with_index do |cell, col_idx|
-        cell_names["#{alphabet[col_idx]}#{[row_idx + 1]}"] = [row_idx, col_idx]
+        cell_names["#{alphabet[col_idx]}#{row_idx + 1}"] = [col_idx, row_idx]
       end
     end
-    puts cell_names
+    # puts cell_names
   end
 
 end
