@@ -22,12 +22,11 @@ describe Game do
 
   describe '#create_chesspieces' do
 
-    before do
-      allow(board).to receive(:display_board)
-    end
-    it 'adds white chess pieces to the board' do
-      game.create_chesspieces
-      expect(game.board.board[0][1]).to eq(knight.symbol)
+
+    it 'create objects for WHITE chess pieces' do
+      expect(Knight).to receive(:new).twice
+      game.create_chesspieces('white')
+      # expect(game.board.board[0][1]).to eq(knight.symbol)
     end
   end
 
