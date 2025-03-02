@@ -8,7 +8,8 @@ class Game
 
   def initialize
     @board = Board.new
-
+    @white_chesspieces_positions = {}
+    @black_chesspieces_positions = {}
   end
 
   def play_game
@@ -19,8 +20,8 @@ class Game
     puts board.board[0][1]
     puts board.board[1][0]
     # board.name_cells
-    create_chesspieces('white')
-    create_chesspieces('black')
+    create_chesspieces_and_add_to_board('white')
+    create_chesspieces_and_add_to_board('black')
     # create chesspieces - colors and their coordinates
   end
 
@@ -34,15 +35,15 @@ class Game
     @player2 = Players.new(player2_name)
   end
 
-  def create_chesspieces(color)
-    # binding.pry
-    Knight.new(color, "\u2658 ")
-    # should I pass that method to board class and create them there
-    # or here?
-    # after they are created I can make assign chesspieces to board method
-    # and add them to board
-    # board.board[0][1] = board.knight.symbol
-    
+  def create_chesspieces_and_add_to_board(color)
+    create_chesspieces_positions(color)
+    @knight = Knight.new(color, "\u2658 ")
+
+    board.board[0][1] = @knight.symbol
+  end
+
+  def create_chesspieces_positions(color)
+    @white_chesspieces_positions[:knight] = [:B1, :G1]
   end
 
   def play_round
