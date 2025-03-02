@@ -39,10 +39,26 @@ describe Game do
 
   describe '#create_chesspieces_positions' do
     
-    it 'creates hash with key of the piece name and value of board cell name' do
-      hash = {:knight => [:B1, :G1]}
+    it 'creates hash with keys of the WHITE piece name and values of board cell name' do
+      hash = {:rook => [:A1, :H1],
+              :knight => [:B1, :G1],
+              :bishop => [:C1, :F1],
+              :queen => [:D1],
+              :king => [:E1],
+              :pawn => [:A2, :B2, :C2, :D2, :E2, :F2, :G2, :H2]}
       game.create_chesspieces_positions('white')
       expect(game.instance_variable_get(:@white_chesspieces_positions)).to eq(hash)
+    end
+
+    it 'creates hash with keys of the BLACK piece name and values of board cell name' do
+      hash = {:rook => [:A8, :H8],
+              :knight => [:B8, :G8],
+              :bishop => [:C8, :F8],
+              :queen => [:D8],
+              :king => [:E8],
+              :pawn => [:A7, :B7, :C7, :D7, :E7, :F7, :G7, :H7]}
+      game.create_chesspieces_positions('black')
+      expect(game.instance_variable_get(:@black_chesspieces_positions)).to eq(hash)
     end
   end
 
