@@ -23,6 +23,8 @@ class Game
     # board.name_cells
     create_chesspieces_and_add_to_board('white')
     create_chesspieces_and_add_to_board('black')
+    # binding.pry
+
     board.display_board
 
     # create chesspieces - colors and their coordinates
@@ -50,7 +52,6 @@ class Game
       case key
       when :rook
         values.each do |value|
-          # binding.pry
           rook = Rook.new(color, value)
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = rook.symbol
         end
