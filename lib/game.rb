@@ -43,7 +43,21 @@ class Game
   end
 
   def create_chesspieces_positions(color)
-    @white_chesspieces_positions[:knight] = [:B1, :G1]
+    if color == 'white'
+      @white_chesspieces_positions[:rook] = [:A1, :H1]
+      @white_chesspieces_positions[:knight] = [:B1, :G1]
+      @white_chesspieces_positions[:bishop] = [:C1, :F1]
+      @white_chesspieces_positions[:queen] = [:D1]
+      @white_chesspieces_positions[:king] = [:E1]
+      @white_chesspieces_positions[:pawn] = [:A2, :B2, :C2, :D2, :E2, :F2, :G2, :H2]
+    else
+      @black_chesspieces_positions[:rook] = [:A8, :H8]
+      @black_chesspieces_positions[:knight] = [:B8, :G8]
+      @black_chesspieces_positions[:bishop] = [:C8, :F8]
+      @black_chesspieces_positions[:queen] = [:D8]
+      @black_chesspieces_positions[:king] = [:E8]
+      @black_chesspieces_positions[:pawn] = [:A7, :B7, :C7, :D7, :E7, :F7, :G7, :H7]
+    end
   end
 
   def play_round
