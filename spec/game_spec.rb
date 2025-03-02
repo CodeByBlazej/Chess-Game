@@ -20,13 +20,29 @@ describe Game do
     end
   end
 
-  describe '#create_chesspieces' do
+  describe '#create_chesspieces_and_add_to_board' do
 
+    before do
+      allow(Knight).to receive(:new).and_return(knight)
+    end
 
-    it 'create objects for WHITE chess pieces' do
-      expect(Knight).to receive(:new).twice
-      game.create_chesspieces('white')
-      # expect(game.board.board[0][1]).to eq(knight.symbol)
+    it 'calls Knight.new when creating WHITE pieces' do
+      expect(Knight).to receive(:new).with('white', knight.symbol).at_least(:once)
+      game.create_chesspieces_and_add_to_board('white')
+    end
+
+    it 'assigns the knight symbol to [0][1] on the board' do
+      game.create_chesspieces_and_add_to_board('white')
+      expect(game.board.board[0][1]).to eq(knight.symbol)
+    end
+  end
+
+  describe '#create_chesspieces_positions' do
+    
+    it 'creates hash with key of the piece name and value of board cell name' do
+      hash = {:knight => [:B1, :G1]}
+      game.create_chesspieces_positions('white')
+      expect(game.instance_variable_get(:@white_chesspieces_positions)).to eq(hash)
     end
   end
 
