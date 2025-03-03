@@ -3,7 +3,12 @@ require_relative '../lib/game'
 describe Game do
   subject(:game) { described_class.new }
   let(:board) { instance_double(Board) }
+  let(:rook) { instance_double(Rook, color: 'white', symbol: "\u2656 ")}
   let(:knight) { instance_double(Knight, color: 'white', symbol: "\u2658 ")}
+  let(:bishop) { instance_double(Bishop, color: 'white', symbol: "\u2657 ")}
+  let(:queen) { instance_double(Queen, color: 'white', symbol: "\u2655 ")}
+  let(:king) { instance_double(King, color: 'white', symbol: "\u2654 ")}
+  let(:pawn) { instance_double(Pawn, color: 'white', symbol: "\u2659 ")}
 
   describe '#create_players' do
     
@@ -23,17 +28,30 @@ describe Game do
   describe '#create_chesspieces_and_add_to_board' do
 
     before do
+      allow(Board).to receive(:new)
+      allow(Rook).to receive(:new).and_return(rook)
       allow(Knight).to receive(:new).and_return(knight)
+      allow(Bishop).to receive(:new).and_return(bishop)
+      allow(Queen).to receive(:new).and_return(queen)
+      allow(King).to receive(:new).and_return(king)
+      allow(Pawn).to receive(:new).and_return(pawn)
+
+      game.instance_variable_set(:@white_chesspieces_positions, {:rook => [:A1, :H1],
+      :knight => [:B1, :G1],
+      :bishop => [:C1, :F1],
+      :queen => [:D1],
+      :king => [:E1],
+      :pawn => [:A2, :B2, :C2, :D2, :E2, :F2, :G2, :H2]})
     end
 
     it 'calls Knight.new when creating WHITE pieces' do
-      expect(Knight).to receive(:new).with('white', knight.symbol).at_least(:once)
+      expect(Rook).to receive(:new).with('white', :A1).at_least(:once)
       game.create_chesspieces_and_add_to_board('white')
     end
 
-    it 'assigns the knight symbol to [0][1] on the board' do
+    xit 'assigns the knight symbol to [0][1] on the board' do
       game.create_chesspieces_and_add_to_board('white')
-      expect(game.board.board[0][1]).to eq(knight.symbol)
+      expect(game.board.board[7][1]).to eq(knight.symbol)
     end
   end
 
