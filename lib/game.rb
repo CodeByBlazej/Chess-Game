@@ -53,7 +53,12 @@ class Game
       when :rook
         values.each do |value|
           rook = Rook.new(color, value)
-          board.board[board.cell_names[value][0]][board.cell_names[value][1]] = rook.symbol
+          board.board[board.cell_names[value][0]][board.cell_names[value][1]] = rook.symbol 
+        end
+      when :knight
+        values.each do |value|
+          knight = Knight.new(color, value)
+          board.board[board.cell_names[value][0]][board.cell_names[value][1]] = knight.symbol
         end
       end
     end 
