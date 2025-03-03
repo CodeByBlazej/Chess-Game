@@ -5,6 +5,7 @@ require_relative 'game/rook'
 require_relative 'game/bishop'
 require_relative 'game/queen'
 require_relative 'game/king'
+require_relative 'game/pawn'
 require 'pry-byebug'
 
 class Game
@@ -77,6 +78,11 @@ class Game
         values.each do |value|
           king = King.new(color, value)
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = king.symbol
+        end
+      when :pawn
+        values.each do |value|
+          pawn = Pawn.new(color, value)
+          board.board[board.cell_names[value][0]][board.cell_names[value][1]] = pawn.symbol
         end
       end
     end 
