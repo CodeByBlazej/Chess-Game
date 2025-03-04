@@ -47,9 +47,6 @@ class Game
   def create_chesspieces_and_add_to_board(color)
     create_chesspieces_positions(color)
 
-    # @knight = Knight.new(color, "\u2658 ")
-
-    # board.board[0][1] = @knight.symbol
     color == 'white' ? col_pos = white_chesspieces_positions : col_pos = black_chesspieces_positions
 
     col_pos.each_pair do |key, values|
