@@ -26,9 +26,11 @@ describe Game do
   end
 
   describe '#create_chesspieces_and_add_to_board' do
+    let(:board_obj) { Board.new }
 
     before do
-      allow(Board).to receive(:new)
+      allow(game).to receive(:board).and_return(board_obj)
+
       allow(Rook).to receive(:new).and_return(rook)
       allow(Knight).to receive(:new).and_return(knight)
       allow(Bishop).to receive(:new).and_return(bishop)
@@ -44,14 +46,32 @@ describe Game do
       :pawn => [:A2, :B2, :C2, :D2, :E2, :F2, :G2, :H2]})
     end
 
-    it 'calls Knight.new when creating WHITE pieces' do
+    it 'calls Rook.new when creating WHITE pieces' do
+      board_obj.name_cells
+
       expect(Rook).to receive(:new).with('white', :A1).at_least(:once)
       game.create_chesspieces_and_add_to_board('white')
     end
 
-    xit 'assigns the knight symbol to [0][1] on the board' do
+    it 'calls Queen.new when creating WHITE pieces' do
+      board_obj.name_cells
+
+      expect(Queen).to receive(:new).with('white', :D1).at_least(:once)
       game.create_chesspieces_and_add_to_board('white')
-      expect(game.board.board[7][1]).to eq(knight.symbol)
+    end
+
+    it 'assigns the rook symbol to [7][0] on the board' do
+      board_obj.name_cells
+
+      game.create_chesspieces_and_add_to_board('white')
+      expect(game.board.board[7][0]).to eq(rook.symbol)
+    end
+
+    it 'assigns the queen symbol to [7][3] on the board' do
+      board_obj.name_cells
+
+      game.create_chesspieces_and_add_to_board('white')
+      expect(game.board.board[7][3]).to eq(queen.symbol)
     end
   end
 
