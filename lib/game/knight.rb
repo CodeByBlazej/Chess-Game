@@ -9,4 +9,11 @@ class Knight
     @starting_position = starting_position
     @current_position = nil
   end
+
+  def test_display
+    puts @starting_position
+    p @starting_position
+    puts @current_position
+    p @current_position
+  end
 end
