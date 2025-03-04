@@ -15,23 +15,27 @@ class Game
     @board = Board.new
     @white_chesspieces_positions = {}
     @black_chesspieces_positions = {}
+    @white_chesspieces_objects = []
+    @black_chesspieces_objects = []
   end
 
   def play_game
     introduction
     create_players
-    # play_round
     board.display_board
-    puts board.board[0][1]
-    puts board.board[1][0]
-    # board.name_cells
     create_chesspieces_and_add_to_board('white')
     create_chesspieces_and_add_to_board('black')
-    # binding.pry
-
     board.display_board
 
-    # create chesspieces - colors and their coordinates
+    # play_round until end_game?
+    # in play_game player is asked what chesspiece he picks up
+    # then he he asked where he wants to move
+    binding.pry
+    puts @white_chesspieces_objects
+    #try to solve this like that = assign particular object to
+    #each cell_name while creating chesspiecen and adding them to board.
+    #try to add them to the same hash and just reassign everything on the move
+    # board.knight.test_display
   end
 
   def create_players
@@ -54,6 +58,7 @@ class Game
       when :rook
         values.each do |value|
           rook = Rook.new(color, value)
+          # color == 'white' ? @white_chesspieces_objects << rook : @black_chesspieces_objects << rook
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = rook.symbol 
         end
       when :knight
