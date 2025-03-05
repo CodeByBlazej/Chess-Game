@@ -38,6 +38,8 @@ describe Game do
       allow(King).to receive(:new).and_return(king)
       allow(Pawn).to receive(:new).and_return(pawn)
 
+      game.instance_variable_set(:@chesspiece, {})
+
       game.instance_variable_set(:@white_chesspieces_positions, {:rook => [:A1, :H1],
       :knight => [:B1, :G1],
       :bishop => [:C1, :F1],
@@ -72,6 +74,14 @@ describe Game do
 
       game.create_chesspieces_and_add_to_board('white')
       expect(game.board.board[7][3]).to eq(queen.symbol)
+    end
+
+    it 'assigns every rook object to their cell names' do
+      board_obj.name_cells
+
+      game.create_chesspieces_and_add_to_board('white')
+      expect(game.chesspiece[:A1]).to eq(rook)
+      expect(game.chesspiece[:H1]).to eq(rook)
     end
   end
 
