@@ -16,8 +16,6 @@ class Game
     @white_chesspieces_positions = {}
     @black_chesspieces_positions = {}
     @chesspiece = {}
-    # @white_chesspieces_objects = []
-    # @black_chesspieces_objects = []
   end
 
   def play_game
@@ -33,12 +31,8 @@ class Game
     # then he he asked where he wants to move
     # binding.pry
     chesspiece[:B1].test_display
-    chesspiece[:G1].test_display
-    chesspiece[:B8].test_display
-    #try to solve this like that = assign particular object to
-    #each cell_name while creating chesspiecen and adding them to board.
-    #try to add them to the same hash and just reassign everything on the move
-    # board.knight.test_display
+    # chesspiece[:G1].test_display
+    # chesspiece[:B8].test_display
   end
 
   def create_players
@@ -66,7 +60,7 @@ class Game
         end
       when :knight
         values.each do |value|
-          knight = Knight.new(color, value)
+          knight = Knight.new(color, value, @board)
           chesspiece[value] = knight
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = knight.symbol
         end
