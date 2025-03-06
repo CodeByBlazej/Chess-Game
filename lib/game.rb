@@ -9,13 +9,13 @@ require_relative 'game/pawn'
 require 'pry-byebug'
 
 class Game
-  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece
+  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions
 
   def initialize
     @board = Board.new
     @white_chesspieces_positions = {}
     @black_chesspieces_positions = {}
-    @chesspiece = {}
+    # @chesspiece = {}
   end
 
   def play_game
@@ -30,7 +30,7 @@ class Game
     # in play_game player is asked what chesspiece he picks up
     # then he he asked where he wants to move
     # binding.pry
-    chesspiece[:B1].test_display
+    board.chesspiece[:B1].test_display
     # chesspiece[:G1].test_display
     # chesspiece[:B8].test_display
   end
@@ -55,37 +55,37 @@ class Game
       when :rook
         values.each do |value|
           rook = Rook.new(color, value)
-          chesspiece[value] = rook
+          board.chesspiece[value] = rook
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = rook.symbol 
         end
       when :knight
         values.each do |value|
           knight = Knight.new(color, value, @board)
-          chesspiece[value] = knight
+          board.chesspiece[value] = knight
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = knight.symbol
         end
       when :bishop
         values.each do |value|
           bishop = Bishop.new(color, value)
-          chesspiece[value] = bishop
+          board.chesspiece[value] = bishop
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = bishop.symbol
         end
       when :queen
         values.each do |value|
           queen = Queen.new(color, value)
-          chesspiece[value] = queen
+          board.chesspiece[value] = queen
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = queen.symbol
         end
       when :king
         values.each do |value|
           king = King.new(color, value)
-          chesspiece[value] = king
+          board.chesspiece[value] = king
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = king.symbol
         end
       when :pawn
         values.each do |value|
           pawn = Pawn.new(color, value)
-          chesspiece[value] = pawn
+          board.chesspiece[value] = pawn
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = pawn.symbol
         end
       end
