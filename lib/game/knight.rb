@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class Knight
-  attr_reader :color, :symbol, :starting_position, :current_position, :board
+  attr_reader :color, :symbol, :starting_position, :current_position, :board, :all_moves
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -11,19 +11,48 @@ class Knight
     @starting_position_cell = starting_position_cell
     @starting_position_coord = nil
     @current_position = board.cell_names[starting_position_cell]
-    # @starting_position2 = board.cell_names[starting_position]
+    @all_moves = nil
   end
 
   def available_moves
     moves = [-2, -1, 1, 2].shuffle
     allowed_moves = moves.permutation(2).reject { |a, b| (a + b).zero? }
     potential_moves = allowed_moves.map { |a, b| [a + current_position[0], b + current_position[1]] }
-    board_moves = potential_moves.select do |a, b|
+    @all_moves = potential_moves.select do |a, b|
       a >= 0 && a <= 7 && b >= 0 && b <= 7
     end
-    board_moves.select do |coordinates|
-      cell_name = board.cell_names.key(coordinates)
-      board.chesspiece[cell_name] == nil
+    # board_moves.select do |coordinates|
+    #   cell_name = board.cell_names.key(coordinates)
+    #   board.chesspiece[cell_name] == nil
+    # end
+    # 
+    # make new object variable containing ALL available moves.
+    # Then make new method that will use that variable for defining
+    # allowed move and displaying message in puts, 
+    # killing other player and moving there(returning new method)
+    # or simply moving there if its free 
+  end
+
+  def moves(to)
+    available_moves
+    # all_moves.select do |coordinates|
+    #   cell_name = board.cell_names.key(coordinates)
+    #   board.chesspiece[cell_name] == nil
+    # end
+
+    # all_moves.each do |coordinates|
+    #   if 
+    # end
+    cell_name = board.cell_names.key(to)
+
+    if all_moves.any?(to) && board.cell_names.key(to) == nil
+      # chesspiece moves to that place!
+    elsif all_moves.any?(to) && board.chesspiece[cell_name].color == color
+      puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
+    elsif all_moves.any?(to) && board.chesspiece[cell_name].color == 'black'
+      # kill method here!
+    else
+      puts 'You cannot make this move!'
     end
   end
 
@@ -35,7 +64,8 @@ class Knight
     p @board.cell_names[:B1]
     p @starting_position2
     p available_moves
-    # binding.pry
+    p moves
+    binding.pry
     p 'finish'
     # think about changing how game creates each object. instead of 
     # passing starting position pass only board and then in each object
