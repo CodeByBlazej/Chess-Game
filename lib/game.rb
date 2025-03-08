@@ -29,7 +29,7 @@ class Game
     # play_round until end_game?
     # in play_game player is asked what chesspiece he picks up
     # then he he asked where he wants to move
-    # binding.pry
+    binding.pry
     board.chesspiece[:B1].test_display
     # chesspiece[:G1].test_display
     # chesspiece[:B8].test_display
@@ -41,8 +41,15 @@ class Game
     puts 'Player 2, what is your name?'
     @player2_name = gets.chomp
 
-    @player1 = Players.new(player1_name)
-    @player2 = Players.new(player2_name)
+    name = [player1_name, player2_name].sample
+
+    # color = ['white', 'black'].sample
+    name_of_player1 = name
+    name_of_player2 = name == player1_name ? player2_name : player1_name
+    puts "Player - #{name_of_player1} got assigned WHITE color"
+    @player1 = Players.new(name_of_player1, 'white')
+    puts "Player - #{name_of_player2} got assigned BLACK color"
+    @player2 = Players.new(name_of_player2, 'black')
   end
 
   def create_chesspieces_and_add_to_board(color)
@@ -111,11 +118,6 @@ class Game
   end
 
   def play_round
-    board.board[0][0] = "\u2655 "
-    board.board[0][2] = "\u265A "
-    board.board[0][3] = "\u2654 "
-    board.board[0][5] = "\u265A "
-
 
   end
 
