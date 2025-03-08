@@ -80,8 +80,8 @@ describe Game do
       board_obj.name_cells
 
       game.create_chesspieces_and_add_to_board('white')
-      expect(game.chesspiece[:A1]).to eq(rook)
-      expect(game.chesspiece[:H1]).to eq(rook)
+      expect(game.board.chesspiece[:A1]).to eq(rook)
+      expect(game.board.chesspiece[:H1]).to eq(rook)
     end
   end
 
@@ -107,6 +107,12 @@ describe Game do
               :pawn => [:A7, :B7, :C7, :D7, :E7, :F7, :G7, :H7]}
       game.create_chesspieces_positions('black')
       expect(game.instance_variable_get(:@black_chesspieces_positions)).to eq(hash)
+    end
+  end
+
+  describe '#play_round' do
+    it 'asks the player with white color to pick chesspiece he wants to move' do
+      expect(game).to receive(:puts).with('Player')
     end
   end
 
