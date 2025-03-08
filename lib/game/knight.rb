@@ -21,28 +21,11 @@ class Knight
     @all_moves = potential_moves.select do |a, b|
       a >= 0 && a <= 7 && b >= 0 && b <= 7
     end
-    # board_moves.select do |coordinates|
-    #   cell_name = board.cell_names.key(coordinates)
-    #   board.chesspiece[cell_name] == nil
-    # end
-    # 
-    # make new object variable containing ALL available moves.
-    # Then make new method that will use that variable for defining
-    # allowed move and displaying message in puts, 
-    # killing other player and moving there(returning new method)
-    # or simply moving there if its free 
   end
 
   def moves(to)
     available_moves
-    # all_moves.select do |coordinates|
-    #   cell_name = board.cell_names.key(coordinates)
-    #   board.chesspiece[cell_name] == nil
-    # end
 
-    # all_moves.each do |coordinates|
-    #   if 
-    # end
     cell_name = board.cell_names.key(to)
 
     if all_moves.any?(to) && board.chesspiece[cell_name] == nil
@@ -76,7 +59,7 @@ class Knight
     p @starting_position2
     p available_moves
     # p moves
-    binding.pry
+    # binding.pry
     p 'finish'
     # think about changing how game creates each object. instead of 
     # passing starting position pass only board and then in each object
