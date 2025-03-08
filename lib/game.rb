@@ -9,13 +9,15 @@ require_relative 'game/pawn'
 require 'pry-byebug'
 
 class Game
-  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions
+  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player
 
   def initialize
     @board = Board.new
     @white_chesspieces_positions = {}
     @black_chesspieces_positions = {}
-    # @chesspiece = {}
+    @chesspiece_to_move = nil
+    @cell_to_go = nil
+    @next_turn_player = nil
   end
 
   def play_game
@@ -25,11 +27,11 @@ class Game
     create_chesspieces_and_add_to_board('white')
     create_chesspieces_and_add_to_board('black')
     board.display_board
-
+    play_round
     # play_round until end_game?
     # in play_game player is asked what chesspiece he picks up
     # then he he asked where he wants to move
-    binding.pry
+    # binding.pry
     board.chesspiece[:B1].test_display
     # chesspiece[:G1].test_display
     # chesspiece[:B8].test_display
@@ -118,18 +120,67 @@ class Game
   end
 
   def play_round
-    selected_chesspiece = nil
-
-    until selected_chesspiece == 
-      #think about moving white_chesspieces_positions and black to board.
-      #then here check if selected chesspiece match any of white pos
-      #and inside add 2 if statements. if not because typo in A2 puts typo message
-      #if not because its black chesspiece puts you cant use black chesspieces
+    if next_turn_player == nil || next_turn_player == player1
+      pick_chesspiece(player1)
+      @next_turn_player = player2
+    else
+      pick_chesspiece(player2)
+      @next_turn_player = player1
     end
-    puts "#{player1.name} select chesspiece you want to move - for example A1 or E2"
-    selected_chesspiece = gets.chomp
-    puts "Select the field you want to go - for example B3 or F4"
 
+    # selected_chesspiece = nil
+
+    # # until selected_chesspiece == 
+    # #   #think about moving white_chesspieces_positions and black to board.
+    # #   #then here check if selected chesspiece match any of white pos
+    # #   #and inside add 2 if statements. if not because typo in A2 puts typo message
+    # #   #if not because its black chesspiece puts you cant use black chesspieces
+    # # end
+    # puts "#{@player1.name} select chesspiece you want to move - for example A1 or E2"
+    # selected_chesspiece = gets.chomp
+    # puts "Select the field you want to go - for example B3 or F4"
+
+  end
+
+  def pick_chesspiece(player)
+    puts "#{player.name} select chesspiece you want to move - for example A1 or E2"
+    selected_chesspiece = gets.chomp.to_sym
+
+    until board.chesspiece[selected_chesspiece].color == player.color do
+      if board.chesspiece[selected_chesspiece].nil?
+        puts "You made a typo! Please try again..."
+        selected_chesspiece = gets.chomp.to_sym
+      elsif board.chesspiece[selected_chesspiece].color != player.color
+        puts "You cannot move your opponent chesspieces! Select one of yours..."
+        selected_chesspiece = gets.chomp.to_sym
+      end
+    end
+
+    # @chesspiece_to_move = board.chesspiece[selected_chesspiece].current_position
+    @chesspiece_to_move = selected_chesspiece
+    pick_cell(player)
+  end
+
+  def pick_cell(player)
+    puts "#{player.name} select field you want to go - for example B3 or F4"
+    selected_cell = gets.chomp.to_sym
+
+    until board.cell_names.keys.any?(selected_cell) do
+      puts "You made a typo! Please try again..."
+      selected_cell = gets.chomp.to_sym
+    end
+
+    @cell_to_go = board.cell_names[selected_cell]
+    make_move(player)
+  end
+
+  def make_move(player)
+    board.chesspiece[chesspiece_to_move].moves(cell_to_go)
+    binding.pry
+    #fix how to check if chesspiece moved. @moved in king is assigned after it moves so it's nil.
+    until board.chesspiece[chesspiece_to_move].moved.true? do
+      pick_cell(player)
+    end
   end
 
   def introduction
