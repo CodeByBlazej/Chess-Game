@@ -118,6 +118,17 @@ class Game
   end
 
   def play_round
+    selected_chesspiece = nil
+
+    until selected_chesspiece == 
+      #think about moving white_chesspieces_positions and black to board.
+      #then here check if selected chesspiece match any of white pos
+      #and inside add 2 if statements. if not because typo in A2 puts typo message
+      #if not because its black chesspiece puts you cant use black chesspieces
+    end
+    puts "#{player1.name} select chesspiece you want to move - for example A1 or E2"
+    selected_chesspiece = gets.chomp
+    puts "Select the field you want to go - for example B3 or F4"
 
   end
 
