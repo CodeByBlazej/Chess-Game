@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class Knight
-  attr_reader :color, :symbol, :starting_position, :current_position, :board, :all_moves
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -45,12 +45,23 @@ class Knight
     # end
     cell_name = board.cell_names.key(to)
 
-    if all_moves.any?(to) && board.cell_names.key(to) == nil
+    if all_moves.any?(to) && board.chesspiece[cell_name] == nil
       # chesspiece moves to that place!
+      @board.board[current_position[0]][current_position[1]] = '  '
+      @board.chesspiece[starting_position_cell] = nil
+      @current_position = to
+      @board.board[to[0]][to[1]] = symbol
+      @board.chesspiece[cell_name] = self
+      return
     elsif all_moves.any?(to) && board.chesspiece[cell_name].color == color
       puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
     elsif all_moves.any?(to) && board.chesspiece[cell_name].color == 'black'
       # kill method here!
+      @board.board[current_position[0]][current_position[1]] = '  '
+      @board.chesspiece[starting_position_cell] = nil
+      @current_position = to
+      @board.board[to[0]][to[1]] = symbol
+      @board.chesspiece[cell_name] = self
     else
       puts 'You cannot make this move!'
     end
@@ -64,7 +75,7 @@ class Knight
     p @board.cell_names[:B1]
     p @starting_position2
     p available_moves
-    p moves
+    # p moves
     binding.pry
     p 'finish'
     # think about changing how game creates each object. instead of 
