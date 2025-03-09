@@ -28,7 +28,8 @@ class Game
     create_chesspieces_and_add_to_board('black')
     board.display_board
     play_round
-    board.display_board
+    play_round
+    # board.display_board
     # play_round until end_game?
     # in play_game player is asked what chesspiece he picks up
     # then he he asked where he wants to move
@@ -166,6 +167,8 @@ class Game
     until board.chesspiece[chesspiece_to_move].nil? do
       pick_cell(player)
     end
+
+    board.display_board
   end
 
   def introduction
