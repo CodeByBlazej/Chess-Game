@@ -14,6 +14,16 @@ class Rook
   end
 
   def available_moves
-    
+    moves = [-7, 0, 7].shuffle
+    allowed_moves = moves.permutation(2).reject { |a, b| (a + b).zero? }
+    potential_moves = allowed_moves.map { |a, b| [a + current_position[0], b + current_position[1]] }
+    @all_moves = potential_moves.select do |a, b|
+      a >= 0 && a <= 7 && b >= 0 && b <= 7
+    end
+  end
+
+  def on_the_way
+    start = current_position
+    p start
   end
 end
