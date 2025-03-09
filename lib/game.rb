@@ -28,6 +28,7 @@ class Game
     create_chesspieces_and_add_to_board('black')
     board.display_board
     play_round
+    binding.pry
     play_round
     # board.display_board
     # play_round until end_game?
@@ -64,7 +65,7 @@ class Game
       case key
       when :rook
         values.each do |value|
-          rook = Rook.new(color, value)
+          rook = Rook.new(color, value, @board)
           board.chesspiece[value] = rook
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = rook.symbol 
         end
