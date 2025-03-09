@@ -28,11 +28,12 @@ class Game
     create_chesspieces_and_add_to_board('black')
     board.display_board
     play_round
+    board.display_board
     # play_round until end_game?
     # in play_game player is asked what chesspiece he picks up
     # then he he asked where he wants to move
     # binding.pry
-    board.chesspiece[:B1].test_display
+    # board.chesspiece[:B1].test_display
     # chesspiece[:G1].test_display
     # chesspiece[:B8].test_display
   end
@@ -45,7 +46,6 @@ class Game
 
     name = [player1_name, player2_name].sample
 
-    # color = ['white', 'black'].sample
     name_of_player1 = name
     name_of_player2 = name == player1_name ? player2_name : player1_name
     puts "Player - #{name_of_player1} got assigned WHITE color"
@@ -127,19 +127,6 @@ class Game
       pick_chesspiece(player2)
       @next_turn_player = player1
     end
-
-    # selected_chesspiece = nil
-
-    # # until selected_chesspiece == 
-    # #   #think about moving white_chesspieces_positions and black to board.
-    # #   #then here check if selected chesspiece match any of white pos
-    # #   #and inside add 2 if statements. if not because typo in A2 puts typo message
-    # #   #if not because its black chesspiece puts you cant use black chesspieces
-    # # end
-    # puts "#{@player1.name} select chesspiece you want to move - for example A1 or E2"
-    # selected_chesspiece = gets.chomp
-    # puts "Select the field you want to go - for example B3 or F4"
-
   end
 
   def pick_chesspiece(player)
@@ -156,7 +143,6 @@ class Game
       end
     end
 
-    # @chesspiece_to_move = board.chesspiece[selected_chesspiece].current_position
     @chesspiece_to_move = selected_chesspiece
     pick_cell(player)
   end
@@ -176,9 +162,8 @@ class Game
 
   def make_move(player)
     board.chesspiece[chesspiece_to_move].moves(cell_to_go)
-    binding.pry
-    #fix how to check if chesspiece moved. @moved in king is assigned after it moves so it's nil.
-    until board.chesspiece[chesspiece_to_move].moved.true? do
+
+    until board.chesspiece[chesspiece_to_move].nil? do
       pick_cell(player)
     end
   end
