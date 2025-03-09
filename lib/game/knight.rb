@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class Knight
-  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :moved
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -12,7 +12,6 @@ class Knight
     @starting_position_coord = nil
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
-    @moved = nil
   end
 
   def available_moves
@@ -27,8 +26,6 @@ class Knight
   def moves(to)
     available_moves
 
-    @moved = false
-
     cell_name = board.cell_names.key(to)
 
     if all_moves.any?(to) && board.chesspiece[cell_name] == nil
@@ -38,7 +35,6 @@ class Knight
       @current_position = to
       @board.board[to[0]][to[1]] = symbol
       @board.chesspiece[cell_name] = self
-      @moved = true
       return
     elsif all_moves.any?(to) && board.chesspiece[cell_name].color == color
       puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
