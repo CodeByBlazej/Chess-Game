@@ -9,7 +9,6 @@ class Knight
     @color = color
     @symbol = color == 'white' ? "\u2658 " : "\u265E "
     @starting_position_cell = starting_position_cell
-    @starting_position_coord = nil
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
   end
@@ -29,25 +28,31 @@ class Knight
     cell_name = board.cell_names.key(to)
 
     if all_moves.any?(to) && board.chesspiece[cell_name] == nil
-      # chesspiece moves to that place!
-      @board.board[current_position[0]][current_position[1]] = '  '
-      @board.chesspiece[starting_position_cell] = nil
-      @current_position = to
-      @board.board[to[0]][to[1]] = symbol
-      @board.chesspiece[cell_name] = self
+      chesspiece_moves(to, cell_name)
       return
     elsif all_moves.any?(to) && board.chesspiece[cell_name].color == color
       puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
     elsif all_moves.any?(to) && board.chesspiece[cell_name].color == 'black'
-      # kill method here!
-      @board.board[current_position[0]][current_position[1]] = '  '
-      @board.chesspiece[starting_position_cell] = nil
-      @current_position = to
-      @board.board[to[0]][to[1]] = symbol
-      @board.chesspiece[cell_name] = self
+      chesspiece_kills(to, cell_name)
     else
       puts 'You cannot make this move!'
     end
+  end
+
+  def chesspiece_moves(to, cell_name)
+    @board.board[current_position[0]][current_position[1]] = '  '
+    @board.chesspiece[starting_position_cell] = nil
+    @current_position = to
+    @board.board[to[0]][to[1]] = symbol
+    @board.chesspiece[cell_name] = self
+  end
+
+  def chesspiece_kills(to, cell_name)
+    @board.board[current_position[0]][current_position[1]] = '  '
+    @board.chesspiece[starting_position_cell] = nil
+    @current_position = to
+    @board.board[to[0]][to[1]] = symbol
+    @board.chesspiece[cell_name] = self
   end
 
   def test_display
