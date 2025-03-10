@@ -28,7 +28,8 @@ class Game
     create_chesspieces_and_add_to_board('black')
     board.display_board
     play_round
-    binding.pry
+    # binding.pry
+    play_round
     play_round
     # board.display_board
     # play_round until end_game?
