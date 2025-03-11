@@ -96,7 +96,7 @@ class Game
         end
       when :pawn
         values.each do |value|
-          pawn = Pawn.new(color, value)
+          pawn = Pawn.new(color, value, @board)
           board.chesspiece[value] = pawn
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = pawn.symbol
         end
