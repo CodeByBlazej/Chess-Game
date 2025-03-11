@@ -49,4 +49,24 @@ class Bishop
 
     @all_moves = reachable
   end
+
+  def moves(to)
+    available_moves
+    cell_name = board.cell_names.key(to)
+
+    if all_moves.any?(to)
+      chesspiece_moves(to, cell_name)
+      return
+    else
+      puts 'You cannot make this move!'
+    end
+  end
+
+  def chesspiece_moves(to, cell_name)
+    @board.board[current_position[0]][current_position[1]] = '  '
+    @board.chesspiece[starting_position_cell] = nil
+    @current_position = to
+    @board.board[to[0]][to[1]] = symbol
+    @board.chesspiece[cell_name] = self
+  end
 end
