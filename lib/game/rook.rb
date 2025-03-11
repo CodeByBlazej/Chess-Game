@@ -58,8 +58,12 @@ class Rook
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
       return
-    elsif occupant && occupant.color == color && same_row_and_col
-      puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
+    elsif to[0] == current_position[0] || to[1] == current_position[1]
+      if occupant && occupant.color == color
+        puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
+      else
+        puts 'You cannot make this move!'
+      end
     else
       puts 'You cannot make this move!'
     end
