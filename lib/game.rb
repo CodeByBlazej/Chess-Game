@@ -78,7 +78,7 @@ class Game
         end
       when :bishop
         values.each do |value|
-          bishop = Bishop.new(color, value)
+          bishop = Bishop.new(color, value, @board)
           board.chesspiece[value] = bishop
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = bishop.symbol
         end
