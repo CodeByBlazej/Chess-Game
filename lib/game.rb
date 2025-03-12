@@ -31,6 +31,8 @@ class Game
     # binding.pry
     play_round
     play_round
+    play_round
+
     # board.display_board
     # play_round until end_game?
     # in play_game player is asked what chesspiece he picks up
