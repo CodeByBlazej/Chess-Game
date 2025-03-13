@@ -54,5 +54,17 @@ class Queen
     @all_moves = reachable
   end
 
+  def moves(to)
+    available_moves
+    cell_name = board.cell_names.key(to)
+
+    if all_moves.any?(to)
+      chesspiece_moves(to, cell_name)
+      return
+    else
+      puts 'You cannot make this move!'
+    end
+  end
+
   
 end
