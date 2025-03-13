@@ -16,38 +16,38 @@ class Pawn
   def available_moves
     directions = color == 'white' ? [[-1, 0], [-1, -1], [-1, 1]] : [[1, 0], [1, 1], [1, -1]]
 
-    # if first_move?
-    #   directions.unshift(color == 'white' ? [-1, 0] : [1, 0])
-    # end
-
     row, col = current_position
     reachable = []
     iteration = 0
+    moved = false
 
     directions.each do |dr, dc|
       r, c = row, col
-      # iteration += 1
+      iteration += 1
 
       loop do
         r += dr
         c += dc
-        iteration += 1
 
         break unless r.between?(0, 7) && c.between?(0, 7)
 
         cell_name = board.cell_names.key([r, c])
         occupant = board.chesspiece[cell_name]
 
-        if occupant.nil? && iteration <= 2
+        if occupant.nil? && iteration == 1 && first_move? && moved == false
           reachable << [r, c]
-          if first_move?
-            color == 'white' ? directions.insert(1, [-1, 0]) : directions.insert(1, [2, 0])
-            # reachable << [r, c]
-            # iteration + 1
-          else
-            break
-          end
-          # break
+          moved = true
+        elsif occupant.nil? && iteration == 1 && first_move? && moved == true
+          reachable << [r, c]
+          break
+        elsif occupant.nil? && iteration == 1 
+          reachable << [r, c]
+          break
+        elsif occupant && occupant.color != color
+          reachable << [r, c]
+          break
+        else
+          break
         end
       end
     end
@@ -58,10 +58,8 @@ class Pawn
 
   def first_move?
     if color == 'white'
-      # game.white_chesspieces_positions[:pawn].any?(self.starting_position_cell)
       current_position[0] == 6
     else
-      # game.black_chesspieces_positions[:pawn].any?(self.starting_position_cell)
       current_position[0] == 1
     end
   end
