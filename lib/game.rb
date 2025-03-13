@@ -86,7 +86,7 @@ class Game
         end
       when :queen
         values.each do |value|
-          queen = Queen.new(color, value)
+          queen = Queen.new(color, value, @board)
           board.chesspiece[value] = queen
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = queen.symbol
         end
