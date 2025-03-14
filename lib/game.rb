@@ -32,6 +32,8 @@ class Game
     play_round
     play_round
     play_round
+    play_round
+
 
     # board.display_board
     # play_round until end_game?
@@ -92,7 +94,7 @@ class Game
         end
       when :king
         values.each do |value|
-          king = King.new(color, value)
+          king = King.new(color, value, @board)
           board.chesspiece[value] = king
           board.board[board.cell_names[value][0]][board.cell_names[value][1]] = king.symbol
         end
