@@ -139,26 +139,27 @@ class Game
   def pick_chesspiece(player)
     puts "#{player.name} select chesspiece you want to move - for example A1 or E2"
     selected_chesspiece = gets.chomp.to_sym
-    binding.pry
-    until board.chesspiece[selected_chesspiece].color == player.color do
+
+    until can_chesspiece_move?(selected_chesspiece) && board.chesspiece[selected_chesspiece].color == player.color do  
       if board.chesspiece[selected_chesspiece].nil?
         puts "You made a typo! Please try again..."
+        selected_chesspiece = gets.chomp.to_sym
+      elsif can_chesspiece_move?(selected_chesspiece) == false
+        puts "This chesspiece has no moves available at this moment, select another one..."
         selected_chesspiece = gets.chomp.to_sym
       elsif board.chesspiece[selected_chesspiece].color != player.color
         puts "You cannot move your opponent chesspieces! Select one of yours..."
         selected_chesspiece = gets.chomp.to_sym
-      elsif board.chesspiece[selected_chesspiece].all_moves.empty?
-        puts "This chesspiece has no moves available at this moment, select another one..."
-        selected_chesspiece = gets.chomp.to_sym
       end
     end
 
-    can_chesspiece_move?(selected_chesspiece)
     @chesspiece_to_move = selected_chesspiece
     pick_cell(player)
   end
 
   def can_chesspiece_move?(selected_chesspiece)
+    return false if board.chesspiece[selected_chesspiece].nil?
+
     board.chesspiece[selected_chesspiece].available_moves
     available_moves = board.chesspiece[selected_chesspiece].all_moves
     available_moves.any?
