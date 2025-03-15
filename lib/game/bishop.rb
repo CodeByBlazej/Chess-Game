@@ -65,6 +65,7 @@ class Bishop
   def chesspiece_moves(to, cell_name)
     @board.board[current_position[0]][current_position[1]] = '  '
     @board.chesspiece[starting_position_cell] = nil
+    @starting_position_cell = cell_name
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
