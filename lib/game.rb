@@ -27,12 +27,12 @@ class Game
     create_chesspieces_and_add_to_board('white')
     create_chesspieces_and_add_to_board('black')
     board.display_board
-    play_round
+    play_round until end_game
     # binding.pry
-    play_round
-    play_round
-    play_round
-    play_round
+    # play_round
+    # play_round
+    # play_round
+    # play_round
 
 
     # board.display_board
@@ -189,6 +189,34 @@ class Game
   end
 
   def end_game
+    chessmate?
+  end
+
+  def chessmate?
+    if next_turn_player.nil?
+      color = nil
+    else
+      color = next_turn_player.color
+    end
+    # if all king moves are also opponents moves
+    king_position = @white_chesspieces_positions[:king][0]
+    king = board.chesspiece[king_position]
+    
+    opponents_moves = []
+    board.chesspiece.values.each { |chesspiece| chesspiece.nil? ? opponents_moves << nil : opponents_moves << chesspiece.all_moves }
+
+    # king.all_moves.all?(opponents_moves)
+    if king.all_moves
+      if king.all_moves.all?(opponents_moves)
+        true
+      elsif king.all_moves.any?(opponents_moves)
+        check
+      end
+    end
+    # binding.pry
+  end
+
+  def check
     
   end
 
