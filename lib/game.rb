@@ -208,7 +208,7 @@ class Game
     # king.all_moves.all?(opponents_moves)
     if king.all_moves
       if king.all_moves.all?(opponents_moves)
-        true
+        return true
       elsif king.all_moves.any?(opponents_moves)
         check
       end
