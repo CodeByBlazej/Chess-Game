@@ -205,6 +205,7 @@ class Game
     #call available moves for all chesspieces
     board.chesspiece.values.each { |chesspiece| chesspiece && chesspiece.available_moves }
 
+    board.create_black_chesspieces_moves #FINISHED HERE
     black_opponent_moves = []
     black_chesspieces = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.color == 'black' }
     black_chesspieces.each { |chesspiece| black_opponent_moves << chesspiece.all_moves }
