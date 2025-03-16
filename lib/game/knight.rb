@@ -14,26 +14,53 @@ class Knight
   end
 
   def available_moves
-    moves = [-2, -1, 1, 2].shuffle
-    allowed_moves = moves.permutation(2).reject { |a, b| (a + b).zero? }
-    potential_moves = allowed_moves.map { |a, b| [a + current_position[0], b + current_position[1]] }
-    @all_moves = potential_moves.select do |a, b|
-      a >= 0 && a <= 7 && b >= 0 && b <= 7
+    directions = [
+      [-2, -1],
+      [-2, 1],
+      [2, -1],
+      [2, 1],
+      [-1, -2],
+      [-1, 2],
+      [1, -2],
+      [1, 2]
+    ]
+
+    row, col = current_position
+    reachable = []
+
+    directions.each do |dr, dc|
+      r, c = row, col
+
+      loop do
+        r += row
+        c += col
+
+        break unless r.between?(0, 7) && c.between?(0, 7)
+
+        cell_name = board.cell_names.key([r, c])
+        occupant = board.chesspiece[cell_name]
+
+        if occupant.nil?
+          reachable << [r, c]
+        else
+          if occupant.color != color
+            reachable << [r, c]
+          end
+          break
+        end
+      end
     end
+
+    @all_moves = reachable
   end
 
   def moves(to)
     available_moves
-
     cell_name = board.cell_names.key(to)
 
-    if all_moves.any?(to) && board.chesspiece[cell_name] == nil
+    if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
       return
-    elsif all_moves.any?(to) && board.chesspiece[cell_name].color == color
-      puts "This cell is occupied by other chesspiece of yours! Please select other cell..."
-    elsif all_moves.any?(to) && board.chesspiece[cell_name].color == 'black'
-      chesspiece_kills(to, cell_name)
     else
       puts 'You cannot make this move!'
     end
@@ -42,32 +69,9 @@ class Knight
   def chesspiece_moves(to, cell_name)
     @board.board[current_position[0]][current_position[1]] = '  '
     @board.chesspiece[starting_position_cell] = nil
+    @starting_position_cell = cell_name
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
-  end
-
-  def chesspiece_kills(to, cell_name)
-    @board.board[current_position[0]][current_position[1]] = '  '
-    @board.chesspiece[starting_position_cell] = nil
-    @current_position = to
-    @board.board[to[0]][to[1]] = symbol
-    @board.chesspiece[cell_name] = self
-  end
-
-  def test_display
-    puts @starting_position_cell
-    p @starting_position_cell
-    puts @current_position
-    p @current_position
-    p @board.cell_names[:B1]
-    p @starting_position2
-    p available_moves
-    # p moves
-    # binding.pry
-    p 'finish'
-    # think about changing how game creates each object. instead of 
-    # passing starting position pass only board and then in each object
-    # make starting position out of board.cell_names where needed
   end
 end
