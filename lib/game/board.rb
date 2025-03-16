@@ -39,4 +39,17 @@ class Board
     # puts cell_names
   end
 
+  def create_black_chesspieces_moves
+    black_opponent_moves = []
+    black_chesspieces = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.color == 'black' }
+    black_chesspieces.each { |chesspiece| black_opponent_moves << chesspiece.all_moves }
+
+    puts "black_opponent_moves = #{black_opponent_moves.flatten(1)}"
+
+    #finish doing this method and start copying more from game.rb
+    #create class variables and set black_opponent_moves to flatten(1)
+    #call everything nicely in chessmate in game and check if it works
+    #the same like from moves branch
+  end
+
 end
