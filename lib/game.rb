@@ -199,38 +199,47 @@ class Game
       color = next_turn_player.color
     end
     # if all king moves are also opponents moves
-    king_position = @white_chesspieces_positions[:king][0]
-    king = board.chesspiece[king_position]
+    # king_position = @white_chesspieces_positions[:king][0]
+    # king = board.chesspiece[king_position]
 
     #call available moves for all chesspieces
-    board.chesspiece.values.each { |chesspiece| chesspiece.available_moves }
+    board.chesspiece.values.each { |chesspiece| chesspiece && chesspiece.available_moves }
 
     black_opponent_moves = []
     black_chesspieces = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.color == 'black' }
     black_chesspieces.each { |chesspiece| black_opponent_moves << chesspiece.all_moves }
     # board.chesspiece.values.each { |chesspiece| chesspiece.color == 'black' ? black_opponent_moves << chesspiece.all_moves : black_opponent_moves << nil }.compact
-    puts "black_opponent_moves = #{black_opponent_moves.compact}"
+    puts "black_opponent_moves = #{black_opponent_moves.flatten(1)}"
 
     white_opponent_moves = []
     white_chesspieces = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.color == 'white' }
     white_chesspieces.each { |chesspiece| white_opponent_moves << chesspiece.all_moves }
-    puts "white_opponent_moves = #{white_opponent_moves.compact}" 
+    puts "white_opponent_moves = #{white_opponent_moves.flatten(1)}" 
 
+    black_king_moves = []
+    black_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u265A " }
+    black_king.each { |chesspiece| black_king_moves << chesspiece.all_moves }
+    puts "black_king_moves = #{black_king_moves.flatten(1)}"
+
+    white_king_moves = []
+    white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
+    white_king.each { |chesspiece| white_king_moves << chesspiece.all_moves }
+    puts "white_king_moves = #{white_king_moves.flatten(1)}"
 
     opponents_moves = []
     board.chesspiece.values.each { |chesspiece| chesspiece.nil? ? opponents_moves << nil : opponents_moves << chesspiece.all_moves }
     # puts "opponents_moves = #{opponents_moves.compact}"
     
-
-    king.available_moves
-    puts "king all_moves #{king.all_moves}"
-    if king.all_moves
-      if king.all_moves.all?(opponents_moves) && opponents_moves.any?([])
-        return true
-      elsif king.all_moves.any?(opponents_moves)
-        check
-      end
-    end
+    false
+    # king.available_moves
+    # puts "king all_moves #{king.all_moves}"
+    # if king.all_moves
+    #   if king.all_moves.all?(opponents_moves) && opponents_moves.any?([])
+    #     return true
+    #   elsif king.all_moves.any?(opponents_moves)
+    #     check
+    #   end
+    # end
     # binding.pry
   end
 
