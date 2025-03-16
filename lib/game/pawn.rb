@@ -53,7 +53,7 @@ class Pawn
     end
 
     @all_moves = reachable
-    puts "DEBUG: Available moves for #{symbol} at #{current_position}: #{@all_moves.inspect}"
+    # puts "DEBUG: Available moves for #{symbol} at #{current_position}: #{@all_moves.inspect}"
   end
 
   def first_move?
@@ -84,6 +84,6 @@ class Pawn
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
 
-    puts "DEBUG: #{symbol} moved to #{to}, new position: #{@current_position.inspect}"
+    # puts "DEBUG: #{symbol} moved to #{to}, new position: #{@current_position.inspect}"
   end
 end
