@@ -194,7 +194,7 @@ class Game
 
   def chessmate?
     if next_turn_player.nil?
-      color = nil
+      return false
     else
       color = next_turn_player.color
     end
@@ -216,10 +216,11 @@ class Game
     puts "black_king_moves = #{board.black_king_moves}"
     puts "white_king_moves = #{board.white_king_moves}"
 
+    breaks_chessmate?
 
     if board.white_king_moves.any?
       if (board.white_king_moves - board.black_chesspieces_moves).empty?
-        puts "chessmate!"
+        puts "Chessmate! #{player2.name} won the game!"
         true
       elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
         puts "check!"
@@ -235,6 +236,26 @@ class Game
     # end
     # binding.pry
 
+  end
+
+  def breaks_chessmate?
+    #find which opponent chesspieces are able to reach my king
+    #and put their moves into separate variables.
+    #Then check if any of my chesspieces contain these moves
+    #and allow player to use only them to move if its check.
+    
+    #check king position and then find which opponent color conatin it move
+    
+    moves = []
+    white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
+    white_king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
+    
+    # puts "white_king_pos_and_moves = #{moves.flatten(1)}"
+    # binding.pry
+    opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
+      chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
+    end
+    puts opponent_chesspiece
   end
 
   def check
