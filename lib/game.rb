@@ -255,7 +255,28 @@ class Game
     opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
       chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
     end
-    puts opponent_chesspiece
+    
+    opponent_chesspiece_moves = []
+    opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.all_moves }
+
+    puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves.flatten(1)}" 
+
+    # now loop over all white chesspieces and select those with
+    # matching moves to opponent_chesspiece_moves. 
+    # Once found, copy board object and queen object and make move
+    # to check if selected chesspiece would break the check?
+    # 
+    # Other idea is to make method can king escape? return true if 
+    # there are spots king can go to which opponent dont have access to.
+    
+    defending_chesspieces = board.chesspiece.values.select do |chesspiece|
+      chesspiece && chesspiece.color == 'white' && (chesspiece.all_moves & opponent_chesspiece_moves.flatten(1)).any?
+    end
+
+    defending_chesspieces_moves = []
+    defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
+
+    puts "defending_chesspieces_moves = #{defending_chesspieces_moves.flatten(1)}"
   end
 
   def check
