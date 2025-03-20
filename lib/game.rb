@@ -277,6 +277,10 @@ class Game
     defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
 
     puts "defending_chesspieces_moves = #{defending_chesspieces_moves.flatten(1)}"
+    
+    black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
+    # binding.pry
+    puts "queen.way_to_king = #{black_queen.way_to_king}"
   end
 
   def check
