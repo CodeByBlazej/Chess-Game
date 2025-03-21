@@ -281,6 +281,14 @@ class Game
     black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
     # binding.pry
     puts "queen.way_to_king = #{black_queen.way_to_king}"
+
+    black_rook = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265C " }
+
+    puts "rook.way_to_king = #{black_rook.way_to_king}"
+
+    black_bishop = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265D " }
+
+    puts "bishop.way_to_king = #{black_bishop.way_to_king}"
   end
 
   def check
