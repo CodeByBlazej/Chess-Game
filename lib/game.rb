@@ -216,9 +216,19 @@ class Game
     puts "black_king_moves = #{board.black_king_moves}"
     puts "white_king_moves = #{board.white_king_moves}"
 
-    breaks_chessmate?
+    # breaks_chessmate?
 
-    if board.white_king_moves.any?
+    # if board.white_king_moves.any?
+    #   if (board.white_king_moves - board.black_chesspieces_moves).empty?
+    #     puts "Chessmate! #{player2.name} won the game!"
+    #     true
+    #   elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
+    #     puts "check!"
+    #     false
+    #   end
+    # end
+
+    if board.white_king_moves.any? 
       if (board.white_king_moves - board.black_chesspieces_moves).empty?
         puts "Chessmate! #{player2.name} won the game!"
         true
@@ -226,16 +236,15 @@ class Game
         puts "check!"
         false
       end
+    elsif board.black_king_moves.any?
+      if (board.black_king_moves - board.white_chesspieces_moves).empty?
+        puts "Chessmate! #{player1.name} won the game!"
+        true
+      elsif board.white_chesspieces_moves.any? { |move| board.black_king_moves.include?(move) }
+        puts "check!"
+        false
+      end
     end
-
-    # if (board.white_king_moves - board.black_chesspieces_moves).empty? && board.white_king_moves.any?
-    #   puts "chessmate!"
-    #   true
-    # else
-    #   false
-    # end
-    # binding.pry
-
   end
 
   def breaks_chessmate?
@@ -283,10 +292,16 @@ class Game
     puts "queen.way_to_king = #{black_queen.way_to_king}"
     puts "queen.all_moves = #{black_queen.all_moves}"
 
-    black_rook = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265C " }
+    black_rooks = board.chesspiece.values.select do |chesspiece|
+      chesspiece && chesspiece.color == 'black' && chesspiece.symbol == "\u265C "
+    end
 
-    puts "rook.way_to_king = #{black_rook.way_to_king}"
-    puts "rook.all_moves = #{black_rook.all_moves}"
+    black_rook_attacking = black_rooks.find { |object| object.way_to_king }
+
+    # puts "black_rook = #{black_rooks}"
+    puts "black_rook_attacking = #{black_rook_attacking.way_to_king if black_rook_attacking}"
+    # puts "rook.way_to_king = #{black_rook.way_to_king}"
+    # puts "rook.all_moves = #{black_rook.all_moves}"
 
     black_bishop = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265D " }
 
