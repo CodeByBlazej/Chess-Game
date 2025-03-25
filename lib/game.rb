@@ -9,7 +9,7 @@ require_relative 'game/pawn'
 require 'pry-byebug'
 
 class Game
-  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player
+  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player, :check, :defending_chesspieces_cells
 
   def initialize
     @board = Board.new
@@ -18,6 +18,8 @@ class Game
     @chesspiece_to_move = nil
     @cell_to_go = nil
     @next_turn_player = nil
+    @check = nil
+    @defending_chesspieces_cells = nil
   end
 
   def play_game
@@ -160,6 +162,12 @@ class Game
   def can_chesspiece_move?(selected_chesspiece)
     return false if board.chesspiece[selected_chesspiece].nil?
 
+    if @check 
+      #check if selected_chesspiece is in moves allowed to move
+      #(the ones who cut the way or kill attacking chesspiece)
+      return true if @defending_chesspieces_cells.any?(selected_chesspiece)
+    end
+
     board.chesspiece[selected_chesspiece].available_moves
     available_moves = board.chesspiece[selected_chesspiece].all_moves
     available_moves.any?
@@ -190,6 +198,7 @@ class Game
 
   def end_game
     chessmate?
+    check?
   end
 
   def chessmate?
@@ -216,7 +225,7 @@ class Game
     puts "black_king_moves = #{board.black_king_moves}"
     puts "white_king_moves = #{board.white_king_moves}"
 
-    # breaks_chessmate?
+    breaks_chessmate?
 
     # if board.white_king_moves.any?
     #   if (board.white_king_moves - board.black_chesspieces_moves).empty?
@@ -234,6 +243,7 @@ class Game
         return true
       elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
         puts "check!"
+        @check = true
         false
       end
     end
@@ -244,9 +254,14 @@ class Game
         return true
       elsif board.white_chesspieces_moves.any? { |move| board.black_king_moves.include?(move) }
         puts "check!"
+        @check = true
         false
       end
     end
+  end
+
+  def check?
+    return true if @check == true
   end
 
   def breaks_chessmate?
@@ -268,7 +283,8 @@ class Game
     end
     
     opponent_chesspiece_moves = []
-    opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.all_moves }
+    # opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.all_moves }
+    opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.way_to_king }
 
     puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves.flatten(1)}" 
 
@@ -284,9 +300,17 @@ class Game
       chesspiece && chesspiece.color == 'white' && (chesspiece.all_moves & opponent_chesspiece_moves.flatten(1)).any?
     end
 
+    @defending_chesspieces_cells = []
+    defending_chesspieces.each do |object|
+      if object.symbol != "\u2654 " && object.symbol != "\u265A "
+        @defending_chesspieces_cells << object.starting_position_cell
+      end
+    end
+    
+    puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
+
     defending_chesspieces_moves = []
     defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
-
     puts "defending_chesspieces_moves = #{defending_chesspieces_moves.flatten(1)}"
     
     black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
