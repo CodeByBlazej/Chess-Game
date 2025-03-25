@@ -231,15 +231,17 @@ class Game
     if board.white_king_moves.any? 
       if (board.white_king_moves - board.black_chesspieces_moves).empty?
         puts "Chessmate! #{player2.name} won the game!"
-        true
+        return true
       elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
         puts "check!"
         false
       end
-    elsif board.black_king_moves.any?
+    end
+
+    if board.black_king_moves.any?
       if (board.black_king_moves - board.white_chesspieces_moves).empty?
         puts "Chessmate! #{player1.name} won the game!"
-        true
+        return true
       elsif board.white_chesspieces_moves.any? { |move| board.black_king_moves.include?(move) }
         puts "check!"
         false
