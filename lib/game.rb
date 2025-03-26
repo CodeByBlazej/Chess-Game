@@ -163,9 +163,14 @@ class Game
     return false if board.chesspiece[selected_chesspiece].nil?
 
     if @check 
+      # binding.pry
       #check if selected_chesspiece is in moves allowed to move
       #(the ones who cut the way or kill attacking chesspiece)
-      return true if @defending_chesspieces_cells.any?(selected_chesspiece)
+      if @defending_chesspieces_cells.any?(selected_chesspiece)
+        return true
+      else
+        return false
+      end
     end
 
     board.chesspiece[selected_chesspiece].available_moves
@@ -198,7 +203,7 @@ class Game
 
   def end_game
     chessmate?
-    check?
+    # check?
   end
 
   def chessmate?
