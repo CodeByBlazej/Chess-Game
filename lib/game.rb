@@ -188,6 +188,14 @@ class Game
     puts "#{player.name} select field you want to go - for example B3 or F4"
     selected_cell = gets.chomp.to_sym
 
+    if @check
+      until #opponent_way_to_king.any?(selected_cell) do
+        puts "You have to pick the field that would block your king! Please select another one..."
+        selected_cell = gets.chomp.to_sym
+      end
+      # return true or 
+    end
+
     until board.cell_names.keys.any?(selected_cell) do
       puts "You made a typo! Please try again..."
       selected_cell = gets.chomp.to_sym
@@ -282,33 +290,41 @@ class Game
     #and allow player to use only them to move if its check.
     
     #check king position and then find which opponent color conatin it move
-    
+    if next_turn_player
+      color = next_turn_player.color
+      king_symbol = color == 'white' ? "\u2654 " : "\u265A "
+    end
+
     moves = []
-    white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
-    white_king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
-    
-    # puts "white_king_pos_and_moves = #{moves.flatten(1)}"
-    # binding.pry
+    # white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
+    # white_king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
+    king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == king_symbol }
+    king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
+
+  
+    # opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
+    #   chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
+    # end
     opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
-      chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
+      chesspiece && chesspiece.color != color && (chesspiece.all_moves & moves.flatten(1)).any? 
     end
     
+    
     opponent_chesspiece_moves = []
-    # opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.all_moves }
     opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.way_to_king }
+
 
     puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves.flatten(1)}" 
 
-    # now loop over all white chesspieces and select those with
-    # matching moves to opponent_chesspiece_moves. 
-    # Once found, copy board object and queen object and make move
-    # to check if selected chesspiece would break the check?
-    # 
-    # Other idea is to make method can king escape? return true if 
-    # there are spots king can go to which opponent dont have access to.
+    opponent_way_to_king_cells = []
+    opponent_chesspiece #I FINISHED HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
     
+    # defending_chesspieces = board.chesspiece.values.select do |chesspiece|
+    #   chesspiece && chesspiece.color == 'white' && (chesspiece.all_moves & opponent_chesspiece_moves.flatten(1)).any?
+    # end
     defending_chesspieces = board.chesspiece.values.select do |chesspiece|
-      chesspiece && chesspiece.color == 'white' && (chesspiece.all_moves & opponent_chesspiece_moves.flatten(1)).any?
+      chesspiece && chesspiece.color == color && (chesspiece.all_moves & opponent_chesspiece_moves.flatten(1)).any?
     end
 
     @defending_chesspieces_cells = []
