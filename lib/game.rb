@@ -146,6 +146,12 @@ class Game
       if board.chesspiece[selected_chesspiece].nil?
         puts "You made a typo! Please try again..."
         selected_chesspiece = gets.chomp.to_sym
+      elsif can_chesspiece_move?(selected_chesspiece) == false && @check
+        puts "You have check! Pick such a chesspiece that will rescue your king!"
+        selected_chesspiece = gets.chomp.to_sym
+      elsif can_chesspiece_move?(selected_chesspiece) == false && board.chesspiece[selected_chesspiece].color != player.color
+        puts "You cannot move your opponent chesspieces! Select one of yours..."
+        selected_chesspiece = gets.chomp.to_sym
       elsif can_chesspiece_move?(selected_chesspiece) == false
         puts "This chesspiece has no moves available at this moment, select another one..."
         selected_chesspiece = gets.chomp.to_sym
