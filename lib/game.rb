@@ -9,7 +9,7 @@ require_relative 'game/pawn'
 require 'pry-byebug'
 
 class Game
-  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player, :check, :defending_chesspieces_cells
+  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player, :check, :defending_chesspieces_cells, :opponent_way_to_king_cells
 
   def initialize
     @board = Board.new
@@ -20,6 +20,7 @@ class Game
     @next_turn_player = nil
     @check = nil
     @defending_chesspieces_cells = nil
+    @opponent_way_to_king_cells = nil
   end
 
   def play_game
@@ -295,18 +296,18 @@ class Game
       king_symbol = color == 'white' ? "\u2654 " : "\u265A "
     end
 
-    moves = []
+    king_moves = []
     # white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
     # white_king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
     king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == king_symbol }
-    king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
+    king.each { |chesspiece| king_moves << chesspiece.all_moves && king_moves << [chesspiece.current_position] }
 
   
     # opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
     #   chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
     # end
     opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
-      chesspiece && chesspiece.color != color && (chesspiece.all_moves & moves.flatten(1)).any? 
+      chesspiece && chesspiece.color != color && (chesspiece.all_moves & king_moves.flatten(1)).any? 
     end
     
     
@@ -316,8 +317,21 @@ class Game
 
     puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves.flatten(1)}" 
 
-    opponent_way_to_king_cells = []
-    opponent_chesspiece #I FINISHED HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    # @opponent_way_to_king_cells = []
+    # board.cell_names.each do |key, value|
+    #   opponent_chesspiece_moves.flatten(1).each do |position|
+    #     @opponent_way_to_king_cells << key if position == value
+    #   end
+    # end
+    flattened_moves = opponent_chesspiece_moves.flatten(1)
+    
+    @opponent_way_to_king_cells = board.cell_names.select do |key, value|
+      flattened_moves.include?(value) && !(board.chesspiece[key] && 
+      [ "\u2654 ", "\u265A " ].include?(board.chesspiece[key].symbol))
+    end.keys
+
+
+    puts "opponent_way_to_king_cells = #{opponent_way_to_king_cells}"
 
     
     # defending_chesspieces = board.chesspiece.values.select do |chesspiece|
@@ -330,10 +344,11 @@ class Game
     @defending_chesspieces_cells = []
     defending_chesspieces.each do |object|
       if object.symbol != "\u2654 " && object.symbol != "\u265A "
+
         @defending_chesspieces_cells << object.starting_position_cell
       end
     end
-    
+    # binding.pry
     puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
     defending_chesspieces_moves = []
