@@ -173,6 +173,8 @@ class Game
       # binding.pry
       #check if selected_chesspiece is in moves allowed to move
       #(the ones who cut the way or kill attacking chesspiece)
+      #check if selected chesspiece is king and if its got free moves
+      #that are not covered by occupant. if so, allow him to move
       if @defending_chesspieces_cells.any?(selected_chesspiece)
         return true
       else
@@ -190,11 +192,13 @@ class Game
     selected_cell = gets.chomp.to_sym
 
     if @check
-      until #opponent_way_to_king.any?(selected_cell) do
+      until @opponent_way_to_king_cells.any?(selected_cell) do
         puts "You have to pick the field that would block your king! Please select another one..."
         selected_cell = gets.chomp.to_sym
       end
-      # return true or 
+      @cell_to_go = board.cell_names[selected_cell]
+      @check = nil
+      return make_move(player)
     end
 
     until board.cell_names.keys.any?(selected_cell) do
