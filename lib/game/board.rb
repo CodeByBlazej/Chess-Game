@@ -1,7 +1,7 @@
 require_relative '../game'
 
 class Board
-  attr_reader :board, :white, :black, :knight, :cell_names, :chesspiece, :black_chesspieces_moves, :white_chesspieces_moves, :black_king_moves, :white_king_moves
+  attr_reader :board, :white, :black, :knight, :cell_names, :chesspiece, :black_chesspieces_moves, :white_chesspieces_moves, :black_king_moves, :white_king_moves, :black_king_position, :white_king_position
 
   def initialize 
     @board = Array.new(8) { Array.new(8, '  ') }
@@ -14,6 +14,8 @@ class Board
     @white_chesspieces_moves = nil
     @black_king_moves = nil
     @white_king_moves = nil
+    @black_king_position = nil
+    @white_king_position = nil
   end
 
   def display_board
@@ -73,17 +75,26 @@ class Board
     black_king = chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u265A " }
     black_king.each { |chesspiece| moves << chesspiece.all_moves }
     
+    position = []
+    black_king.each { |chesspiece| position << chesspiece.current_position }
+
     @black_king_moves = moves.flatten(1)
+    @black_king_position = position.flatten(1)
 
     # puts "black_king_moves = #{black_king_moves.flatten(1)}"
   end
 
   def create_white_king_moves
+    #update this with find rather than select
     moves = []
     white_king = chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
     white_king.each { |chesspiece| moves << chesspiece.all_moves }
-    
+
+    position = []
+    white_king.each { |chesspiece| position << chesspiece.current_position }
+
     @white_king_moves = moves.flatten(1)
+    @white_king_position = position.flatten(1)
 
     # puts "white_king_moves = #{white_king_moves.flatten(1)}"
   end
