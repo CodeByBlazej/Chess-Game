@@ -9,7 +9,7 @@ require_relative 'game/pawn'
 require 'pry-byebug'
 
 class Game
-  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player, :check, :defending_chesspieces_cells, :opponent_way_to_king_cells
+  attr_reader :board, :player1_name, :player2_name, :player1, :player2, :white_chesspieces_positions, :black_chesspieces_positions, :chesspiece_to_move, :cell_to_go, :next_turn_player, :check, :defending_chesspieces_cells, :opponent_way_to_king_cells, :king_escape_moves, :king_selected
 
   def initialize
     @board = Board.new
@@ -21,6 +21,8 @@ class Game
     @check = nil
     @defending_chesspieces_cells = nil
     @opponent_way_to_king_cells = nil
+    @king_escape_moves = nil
+    @king_selected = nil
   end
 
   def play_game
@@ -175,7 +177,10 @@ class Game
       #(the ones who cut the way or kill attacking chesspiece)
       #check if selected chesspiece is king and if its got free moves
       #that are not covered by occupant. if so, allow him to move
-      if @defending_chesspieces_cells.any?(selected_chesspiece)
+      if ["\u2654 ", "\u265A "].include?(board.chesspiece[selected_chesspiece].symbol) && @king_escape_moves.any?
+        @king_selected = true
+        return true
+      elsif @defending_chesspieces_cells.any?(selected_chesspiece)
         return true
       else
         return false
@@ -192,12 +197,13 @@ class Game
     selected_cell = gets.chomp.to_sym
 
     if @check
-      until @opponent_way_to_king_cells.any?(selected_cell) do
+      until @opponent_way_to_king_cells.any?(selected_cell) || @king_selected do
         puts "You have to pick the field that would block your king! Please select another one..."
         selected_cell = gets.chomp.to_sym
       end
       @cell_to_go = board.cell_names[selected_cell]
       @check = nil
+      @king_selected = nil
       return make_move(player)
     end
 
@@ -306,7 +312,7 @@ class Game
     king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == king_symbol }
     king.each { |chesspiece| king_moves << chesspiece.all_moves && king_moves << [chesspiece.current_position] }
 
-  
+    puts " king_moves = #{king_moves}"
     # opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
     #   chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
     # end
@@ -359,6 +365,17 @@ class Game
     defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
     puts "defending_chesspieces_moves = #{defending_chesspieces_moves.flatten(1)}"
     
+    king_escape = []
+    if color == 'white'
+      king_escape << (board.white_king_moves - opponent_chesspiece_moves.flatten(1))
+    else
+      king_escape << (board.black_king_moves - opponent_chesspiece_moves.flatten(1))
+    end
+
+    @king_escape_moves = king_escape.flatten(1)
+
+    puts "king_escape_moves = #{king_escape.flatten(1)}"
+
     black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
     # binding.pry
     puts "queen.way_to_king = #{black_queen.way_to_king}"
