@@ -254,6 +254,8 @@ class Game
     puts "white_chesspieces_moves = #{board.white_chesspieces_moves}" 
     puts "black_king_moves = #{board.black_king_moves}"
     puts "white_king_moves = #{board.white_king_moves}"
+    puts "black_king_position = #{board.black_king_position}"
+    puts "white_king_position = #{board.white_king_position}"
 
     breaks_chessmate?
 
@@ -326,7 +328,7 @@ class Game
 
 
     puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves.flatten(1)}" 
-
+    binding.pry
     # @opponent_way_to_king_cells = []
     # board.cell_names.each do |key, value|
     #   opponent_chesspiece_moves.flatten(1).each do |position|
