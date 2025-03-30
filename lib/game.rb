@@ -202,6 +202,13 @@ class Game
         puts "You have to pick the field that would block your king! Please select another one..."
         selected_cell = gets.chomp.to_sym
       end
+      
+      if @king_selected
+        until king_escape_moves.any?(selected_cell) do
+          puts "You can't move there to escape from check! Select safe field!"
+          selected_cell = gets.chomp.to_sym
+        end
+      end
       @cell_to_go = board.cell_names[selected_cell]
       @check = nil
       @king_selected = nil
@@ -270,22 +277,22 @@ class Game
     #   end
     # end
 
-    if board.white_king_moves.any? 
-      if (board.white_king_moves - board.black_chesspieces_moves).empty?
-        puts "Chessmate! #{player2.name} won the game!"
-        return true
-      elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
-        puts "check!"
-        @check = true
-        false
-      end
-    end
+    # if board.white_king_moves.any? 
+    #   if (board.white_king_moves - board.black_chesspieces_moves).empty?
+    #     puts "Chessmate! #{player2.name} won the game!"
+    #     return true
+    #   elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
+    #     puts "check!"
+    #     @check = true
+    #     false
+    #   end
+    # end
 
     if board.white_king_moves.any? 
       if (board.white_king_moves - board.black_chesspieces_moves).empty?
         puts "Chessmate! #{player2.name} won the game!"
         return true
-      elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
+      elsif opponent_chesspiece_moves.any? { |move| board.white_king_moves.include?(move) }
         puts "check!"
         @check = true
         false
@@ -374,9 +381,9 @@ class Game
     # binding.pry
     puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
-    defending_chesspieces_moves = []
-    defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
-    puts "defending_chesspieces_moves = #{defending_chesspieces_moves.flatten(1)}"
+    defending_chesspieces_moves = defending_chesspieces.map(&:all_moves).flatten(1)
+    # defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
+    puts "defending_chesspieces_moves = #{defending_chesspieces_moves}"
     
     king_escape = []
     if color == 'white'
@@ -385,9 +392,15 @@ class Game
       king_escape << (board.black_king_moves - opponent_chesspiece_moves)
     end
 
-    @king_escape_moves = king_escape.flatten(1)
+    king_escape_flattened = king_escape.flatten(1)
+    @king_escape_moves = board.cell_names.select do |key, value|
+      king_escape_flattened.include?(value)
+    end.keys
+    
+    # @king_escape_moves = king_escape.flatten(1)
+    puts "king_escape_moves = #{@king_escape_moves}"
 
-    puts "king_escape_moves = #{king_escape.flatten(1)}"
+    puts "king_escape = #{king_escape.flatten(1)}"
 
     black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
     # binding.pry
