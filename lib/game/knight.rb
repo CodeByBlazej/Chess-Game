@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class Knight
-  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -11,6 +11,7 @@ class Knight
     @starting_position_cell = starting_position_cell
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
+    @way_to_king = nil
   end
 
   def available_moves
@@ -27,13 +28,14 @@ class Knight
 
     row, col = current_position
     reachable = []
+    way = []
 
     directions.each do |dr, dc|
       r, c = row, col
 
       loop do
-        r += row
-        c += col
+        r += dr
+        c += dc
 
         break unless r.between?(0, 7) && c.between?(0, 7)
 
@@ -42,13 +44,19 @@ class Knight
 
         if occupant.nil?
           reachable << [r, c]
+          way << [r, c]
         else
-          if occupant.color != color
+          if occupant.color != color && (occupant.symbol == "\u2654 " || occupant.symbol == "\u265A ")
+            reachable << [r, c]
+            way << [r, c]
+            @way_to_king = way.dup
+          elsif occupant.color != color && occupant.symbol != "\u2654 " && occupant.symbol != "\u265A "
             reachable << [r, c]
           end
           break
         end
       end
+      way.clear
     end
 
     @all_moves = reachable
