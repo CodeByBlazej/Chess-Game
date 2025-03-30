@@ -202,13 +202,14 @@ class Game
         puts "You have to pick the field that would block your king! Please select another one..."
         selected_cell = gets.chomp.to_sym
       end
-      
+
       if @king_selected
         until king_escape_moves.any?(selected_cell) do
           puts "You can't move there to escape from check! Select safe field!"
           selected_cell = gets.chomp.to_sym
         end
       end
+
       @cell_to_go = board.cell_names[selected_cell]
       @check = nil
       @king_selected = nil
@@ -402,10 +403,10 @@ class Game
 
     puts "king_escape = #{king_escape.flatten(1)}"
 
-    black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
+    # black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
     # binding.pry
-    puts "queen.way_to_king = #{black_queen.way_to_king}"
-    puts "queen.all_moves = #{black_queen.all_moves}"
+    # puts "queen.way_to_king = #{black_queen.way_to_king}"
+    # puts "queen.all_moves = #{black_queen.all_moves}"
 
     black_rooks = board.chesspiece.values.select do |chesspiece|
       chesspiece && chesspiece.color == 'black' && chesspiece.symbol == "\u265C "
