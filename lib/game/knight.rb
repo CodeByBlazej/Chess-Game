@@ -28,35 +28,24 @@ class Knight
 
     row, col = current_position
     reachable = []
-    way = []
 
     directions.each do |dr, dc|
-      r, c = row, col
+      r = row + dr
+      c = col + dc
 
-      loop do
-        r += dr
-        c += dc
+      next unless r.between?(0, 7) && c.between?(0, 7)
 
-        break unless r.between?(0, 7) && c.between?(0, 7)
+      cell_name = board.cell_names.key([r, c])
+      occupant = board.chesspiece[cell_name]
 
-        cell_name = board.cell_names.key([r, c])
-        occupant = board.chesspiece[cell_name]
-
-        if occupant.nil?
+      if occupant.nil?
+        reachable << [r, c]
+      else
+        if occupant.color != color
           reachable << [r, c]
-          way << [r, c]
-        else
-          if occupant.color != color && (occupant.symbol == "\u2654 " || occupant.symbol == "\u265A ")
-            reachable << [r, c]
-            way << [r, c]
-            @way_to_king = way.dup
-          elsif occupant.color != color && occupant.symbol != "\u2654 " && occupant.symbol != "\u265A "
-            reachable << [r, c]
-          end
-          break
+          @way_to_king = [r, c] if [ "\u2654 ", "\u265A " ].include?(occupant.symbol)
         end
       end
-      way.clear
     end
 
     @all_moves = reachable
