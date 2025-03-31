@@ -290,10 +290,13 @@ class Game
     # end
 
     if board.white_king_moves.any? 
-      if (board.white_king_moves - board.black_chesspieces_moves).empty?
+      check = opponent_chesspiece_moves.any? { |move| board.white_king_moves.include?(move) }
+      checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty?
+
+      if checkmate && !check
         puts "Chessmate! #{player2.name} won the game!"
         return true
-      elsif opponent_chesspiece_moves.any? { |move| board.white_king_moves.include?(move) }
+      elsif check
         puts "check!"
         @check = true
         false
@@ -380,6 +383,7 @@ class Game
       end
     end
     # binding.pry
+    
     puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
     defending_chesspieces_moves = defending_chesspieces.map(&:all_moves).flatten(1)
@@ -400,29 +404,7 @@ class Game
     
     # @king_escape_moves = king_escape.flatten(1)
     puts "king_escape_moves = #{@king_escape_moves}"
-
     puts "king_escape = #{king_escape.flatten(1)}"
-
-    # black_queen = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265B " }
-    # binding.pry
-    # puts "queen.way_to_king = #{black_queen.way_to_king}"
-    # puts "queen.all_moves = #{black_queen.all_moves}"
-
-    black_rooks = board.chesspiece.values.select do |chesspiece|
-      chesspiece && chesspiece.color == 'black' && chesspiece.symbol == "\u265C "
-    end
-
-    black_rook_attacking = black_rooks.find { |object| object.way_to_king }
-
-    # puts "black_rook = #{black_rooks}"
-    puts "black_rook_attacking = #{black_rook_attacking.way_to_king if black_rook_attacking}"
-    # puts "rook.way_to_king = #{black_rook.way_to_king}"
-    # puts "rook.all_moves = #{black_rook.all_moves}"
-
-    black_bishop = board.chesspiece.values.find { |chesspiece| chesspiece && chesspiece.symbol == "\u265D " }
-
-    puts "bishop.way_to_king = #{black_bishop.way_to_king}"
-    puts "bishop.way_to_king = #{black_bishop.way_to_king}"
   end
 
   def check
