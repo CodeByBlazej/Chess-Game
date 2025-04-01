@@ -241,16 +241,13 @@ class Game
   end
 
   def chessmate?
-    if next_turn_player.nil?
-      return false
-    else
-      color = next_turn_player.color
-    end
-    # if all king moves are also opponents moves
-    # king_position = @white_chesspieces_positions[:king][0]
-    # king = board.chesspiece[king_position]
+    # if next_turn_player.nil?
+    #   return false
+    # else
+    #   color = next_turn_player.color
+    # end
 
-    #call available moves for all chesspieces
+    
     board.chesspiece.values.each { |chesspiece| chesspiece && chesspiece.available_moves }
 
     board.create_black_chesspieces_moves
@@ -288,34 +285,37 @@ class Game
     #     false
     #   end
     # end
-
-    if board.white_king_moves.any? 
-      check = opponent_chesspiece_moves.include?(board.white_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
-      checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
-
-      if checkmate
-        puts "Chessmate! #{player2.name} won the game!"
-        return true
-      elsif check
-        puts "check!"
-        @check = true
-        false
+    # binding.pry
+    if next_turn_player == player1
+      if board.white_king_moves.any? 
+        check = opponent_chesspiece_moves.include?(board.white_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
+        checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
+  
+        if checkmate
+          puts "Chessmate! #{player2.name} won the game!"
+          return true
+        elsif check
+          puts "check!"
+          @check = true
+          false
+        end
+      end
+    elsif next_turn_player == player2
+      if board.black_king_moves.any?
+        check = opponent_chesspiece_moves.include?(board.black_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
+        checkmate = (board.black_king_moves - board.white_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
+  
+        if checkmate
+          puts "Chessmate! #{player1.name} won the game!"
+          return true
+        elsif check
+          puts "check!"
+          @check = true
+          false
+        end
       end
     end
 
-    if board.black_king_moves.any?
-      check = opponent_chesspiece_moves.include?(board.black_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
-      checkmate = (board.black_king_moves - board.white_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
-
-      if checkmate
-        puts "Chessmate! #{player1.name} won the game!"
-        return true
-      elsif check
-        puts "check!"
-        @check = true
-        false
-      end
-    end
   end
 
   def check?
@@ -333,6 +333,18 @@ class Game
       color = next_turn_player.color
       king_symbol = color == 'white' ? "\u2654 " : "\u265A "
     end
+
+    # if board.white_king_moves.any?
+    #   king_color = 'white'
+    #   opponent_color = 'black'
+    #   king_symbol = "\u2654 "
+    # elsif board.black_king_moves.any?
+    #   king_color = 'black'
+    #   opponent_color = 'white'
+    #   king_symbol = "\u265A "
+    # else
+    #   return
+    # end
 
     king_moves = []
     # white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
