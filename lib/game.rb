@@ -290,10 +290,10 @@ class Game
     # end
 
     if board.white_king_moves.any? 
-      check = opponent_chesspiece_moves.any? { |move| board.white_king_moves.include?(move) }
-      checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty?
+      check = opponent_chesspiece_moves.include?(board.white_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
+      checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
 
-      if checkmate && !check
+      if checkmate
         puts "Chessmate! #{player2.name} won the game!"
         return true
       elsif check
@@ -304,10 +304,13 @@ class Game
     end
 
     if board.black_king_moves.any?
-      if (board.black_king_moves - board.white_chesspieces_moves).empty?
+      check = opponent_chesspiece_moves.include?(board.black_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
+      checkmate = (board.black_king_moves - board.white_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
+
+      if checkmate
         puts "Chessmate! #{player1.name} won the game!"
         return true
-      elsif board.white_chesspieces_moves.any? { |move| board.black_king_moves.include?(move) }
+      elsif check
         puts "check!"
         @check = true
         false
