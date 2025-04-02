@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class Pawn
-  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -11,6 +11,7 @@ class Pawn
     @starting_position_cell = starting_position_cell
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
+    @way_to_king = nil
   end
 
   def available_moves
@@ -18,6 +19,7 @@ class Pawn
 
     row, col = current_position
     reachable = []
+    way = []
     iteration = 0
     moved = false
 
@@ -43,17 +45,22 @@ class Pawn
         elsif occupant.nil? && iteration == 1 
           reachable << [r, c]
           break
-        elsif occupant && occupant.color != color
+        elsif occupant && occupant.color != color && (occupant.symbol == "\u2654 " || occupant.symbol == "\u265A ") && iteration > 1
+          reachable << [r, c]
+          way << [r, c]
+          @way_to_king = way.dup
+          break
+        elsif occupant && occupant.color != color && iteration > 1
           reachable << [r, c]
           break
         else
           break
         end
       end
+      way.clear
     end
 
     @all_moves = reachable
-    # puts "DEBUG: Available moves for #{symbol} at #{current_position}: #{@all_moves.inspect}"
   end
 
   def first_move?
@@ -75,7 +82,6 @@ class Pawn
   def moves(to)
     available_moves
     cell_name = board.cell_names.key(to)
-    # binding.pry
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
@@ -91,7 +97,7 @@ class Pawn
       @board.chesspiece[starting_position_cell] = nil
       @starting_position_cell = cell_name
       @current_position = to
-      
+
       queen = Queen.new(color, cell_name, @board)
       @board.chesspiece[cell_name] = queen
       @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
@@ -104,7 +110,5 @@ class Pawn
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
-
-    # puts "DEBUG: #{symbol} moved to #{to}, new position: #{@current_position.inspect}"
   end
 end
