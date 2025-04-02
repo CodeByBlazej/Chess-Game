@@ -91,7 +91,7 @@ class Pawn
       @board.chesspiece[starting_position_cell] = nil
       @starting_position_cell = cell_name
       @current_position = to
-      # @board.board[to[0]][to[1]] = 
+      
       queen = Queen.new(color, cell_name, @board)
       @board.chesspiece[cell_name] = queen
       @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
