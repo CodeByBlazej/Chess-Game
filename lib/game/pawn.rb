@@ -64,9 +64,18 @@ class Pawn
     end
   end
 
+  def last_move?(to)
+    if color == 'white'
+      to[0] == 0
+    else
+      to[0] == 7
+    end
+  end
+
   def moves(to)
     available_moves
     cell_name = board.cell_names.key(to)
+    # binding.pry
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
@@ -77,6 +86,18 @@ class Pawn
   end
 
   def chesspiece_moves(to, cell_name)
+    if last_move?(to)
+      @board.board[current_position[0]][current_position[1]] = '  '
+      @board.chesspiece[starting_position_cell] = nil
+      @starting_position_cell = cell_name
+      @current_position = to
+      # @board.board[to[0]][to[1]] = 
+      queen = Queen.new(color, cell_name, @board)
+      @board.chesspiece[cell_name] = queen
+      @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
+      return
+    end
+
     @board.board[current_position[0]][current_position[1]] = '  '
     @board.chesspiece[starting_position_cell] = nil
     @starting_position_cell = cell_name
