@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class King
-  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -11,6 +11,7 @@ class King
     @starting_position_cell = starting_position_cell
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
+    @way_to_king = nil
   end
 
   def available_moves
@@ -27,6 +28,7 @@ class King
 
     row, col = current_position
     reachable = []
+    way = []
 
     directions.each do |dr, dc|
       r, c = row, col
@@ -44,12 +46,17 @@ class King
           reachable << [r, c]
           break
         else
-          if occupant && occupant.color != color
+          if occupant && occupant.color != color && (occupant.symbol == "\u2654 " || occupant.symbol == "\u265A ")
+            reachable << [r, c]
+            way << [r, c]
+            @way_to_king = way.dup
+          elsif occupant && occupant.color != color
             reachable << [r, c]
           end
           break
         end
       end
+      way.clear
     end
 
     @all_moves = reachable
