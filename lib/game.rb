@@ -361,7 +361,8 @@ class Game
     end
     
     
-    @opponent_chesspiece_moves = opponent_chesspiece.map(&:way_to_king).flatten(1)
+    # @opponent_chesspiece_moves = opponent_chesspiece.map(&:way_to_king).flatten(1)
+    @opponent_chesspiece_moves = opponent_chesspiece.map { |chesspiece| (chesspiece.way_to_king || []) + [chesspiece.current_position] }.flatten(1)
     # opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.way_to_king }
 
 
