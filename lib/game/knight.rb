@@ -43,7 +43,7 @@ class Knight
       else
         if occupant.color != color
           reachable << [r, c]
-          @way_to_king = [r, c] if [ "\u2654 ", "\u265A " ].include?(occupant.symbol)
+          @way_to_king = [[r, c], current_position] if [ "\u2654 ", "\u265A " ].include?(occupant.symbol)
         end
       end
     end

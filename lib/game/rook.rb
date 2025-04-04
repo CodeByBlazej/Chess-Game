@@ -45,6 +45,7 @@ class Rook
           if occupant.color != color && (occupant.symbol == "\u2654 " || occupant.symbol == "\u265A ")
             reachable << [r, c]
             way << [r, c]
+            way << current_position
             @way_to_king = way.dup
           elsif occupant.color != color && occupant.symbol != "\u2654 " && occupant.symbol != "\u265A "
             reachable << [r, c]
