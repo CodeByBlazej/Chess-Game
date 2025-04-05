@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class King
-  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king, :king_moved, :kingside_castling, :queenside_castling
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -12,9 +12,14 @@ class King
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
     @way_to_king = nil
+    @king_moved = nil
+    @kingside_castling = nil
+    @queenside_castling = nil
   end
 
   def available_moves
+    check_castling
+
     directions = [
       [-1, 0],
       [1, 0],
@@ -42,7 +47,15 @@ class King
         cell_name = board.cell_names.key([r, c])
         occupant = board.chesspiece[cell_name]
 
-        if occupant.nil?
+        if occupant.nil? && kingside_castling
+          reachable << [r, c]
+          reachable << color == 'white' ? [7, 6] : [0, 6]
+          break
+        elsif occupant.nil? && queenside_castling
+          reachable << [r, c]
+          reachable << color == 'white' ? [7, 2] : [0, 2]
+          break
+        elsif occupant.nil?
           reachable << [r, c]
           break
         else
@@ -61,11 +74,60 @@ class King
     end
 
     @all_moves = reachable
+    @kingside_castling = nil
+    @queenside_castling = nil
+  end
+
+  def check_castling
+    kingside_castling_possible?
+    queenside_castling_possible?
+
+    if kingside_castling_possible? && queenside_castling_possible?
+      @kingside_castling = true
+      @queenside_castling = true
+    elsif kingside_castling_possible?
+      @kingside_castling = true
+    elsif queenside_castling_possible?
+      @queenside_castling = true
+    end
+  end
+
+  def kingside_castling_possible?
+    if color == 'white'
+      rook = "\u2656 "
+      return false if board.chesspiece[:H1].symbol != rook
+      rook_didnt_move = board.chesspiece[:H1].rook_moved == nil
+    
+      rook_didnt_move && (board.chesspiece[:F1] && board.chesspiece[:G1]).nil?
+    else
+      rook = "\u265C "
+      return false if board.chesspiece[:H8].symbol != rook
+      rook_didnt_move = board.chesspiece[:H8].rook_moved == nil
+
+      rook_didnt_move && (board.chesspiece[:F8] && board.chesspiece[:G8]).nil?
+    end
+  end
+
+  def queenside_castling_possible?
+    if color == 'white'
+      rook = "\u2656 "
+      return false if board.chesspiece[:A1].symbol != rook
+      rook_didnt_move = board.chesspiece[:A1].rook_moved == nil
+
+      rook_didnt_move && (board.chesspiece[:D1] && board.chesspiece[:C1] && board.chesspiece[:B1]).nil?
+    else
+      rook = "\u265C "
+      return false if board.chesspiece[:A8].symbol != rook
+      rook_didnt_move = board.chesspiece[:A8].rook_moved == nil
+
+      rook_didnt_move && (board.chesspiece[:D8] && board.chesspiece[:C8] && board.chesspiece[:B8]).nil?
+    end
   end
 
   def moves(to)
     available_moves
     cell_name = board.cell_names.key(to)
+    binding.pry
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
@@ -76,11 +138,30 @@ class King
   end
 
   def chesspiece_moves(to, cell_name)
+    castling_fields = [:G1, :G8, :C1, :C8]
+
+    if castling_fields.include?(cell_name) && king_moved == nil
+      #move king
+      #move rook
+      #return
+      
+      @board.board[current_position[0]][current_position[1]] = '  '
+      @board.chesspiece[starting_position_cell] = nil
+      @starting_position_cell = cell_name
+      @current_position = to
+
+      queen = Queen.new(color, cell_name, @board)
+      @board.chesspiece[cell_name] = queen
+      @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
+      return
+    end
+
     @board.board[current_position[0]][current_position[1]] = '  '
     @board.chesspiece[starting_position_cell] = nil
     @starting_position_cell = cell_name
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
+    @king_moved = true
   end
 end
