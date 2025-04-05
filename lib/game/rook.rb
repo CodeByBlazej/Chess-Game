@@ -2,7 +2,7 @@ require_relative '../game'
 require 'pry-byebug'
 
 class Rook
-  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king
+  attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king, :rook_moved
 
   def initialize color, starting_position_cell, board
     @board = board
@@ -12,6 +12,7 @@ class Rook
     @current_position = board.cell_names[starting_position_cell]
     @all_moves = nil
     @way_to_king = nil
+    @rook_moved = nil
   end
 
   def available_moves
@@ -78,6 +79,7 @@ class Rook
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
+    @rook_moved = true
   end
 
 end
