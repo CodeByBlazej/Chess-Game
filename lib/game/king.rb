@@ -49,11 +49,13 @@ class King
 
         if occupant.nil? && kingside_castling
           reachable << [r, c]
-          reachable << color == 'white' ? [7, 6] : [0, 6]
+          color == 'white' ? reachable << [7, 6] : reachable << [0, 6]
+          # reachable << color == 'white' ? [7, 6] : [0, 6]
           break
         elsif occupant.nil? && queenside_castling
           reachable << [r, c]
-          reachable << color == 'white' ? [7, 2] : [0, 2]
+          color == 'white' ? reachable << [7, 2] : reachable << [0, 2]
+          # reachable << color == 'white' ? [7, 2] : [0, 2]
           break
         elsif occupant.nil?
           reachable << [r, c]
@@ -78,7 +80,7 @@ class King
     @queenside_castling = nil
   end
 
-  def check_castling
+  def check_castling #to be fixed as calculates only kingside side and pass queenside
     kingside_castling_possible?
     queenside_castling_possible?
 
@@ -95,13 +97,13 @@ class King
   def kingside_castling_possible?
     if color == 'white'
       rook = "\u2656 "
-      return false if board.chesspiece[:H1].symbol != rook
+      return false if board.chesspiece[:H1]&.symbol != rook
       rook_didnt_move = board.chesspiece[:H1].rook_moved == nil
     
       rook_didnt_move && (board.chesspiece[:F1] && board.chesspiece[:G1]).nil?
     else
       rook = "\u265C "
-      return false if board.chesspiece[:H8].symbol != rook
+      return false if board.chesspiece[:H8]&.symbol != rook
       rook_didnt_move = board.chesspiece[:H8].rook_moved == nil
 
       rook_didnt_move && (board.chesspiece[:F8] && board.chesspiece[:G8]).nil?
@@ -111,13 +113,13 @@ class King
   def queenside_castling_possible?
     if color == 'white'
       rook = "\u2656 "
-      return false if board.chesspiece[:A1].symbol != rook
+      return false if board.chesspiece[:A1]&.symbol != rook
       rook_didnt_move = board.chesspiece[:A1].rook_moved == nil
 
       rook_didnt_move && (board.chesspiece[:D1] && board.chesspiece[:C1] && board.chesspiece[:B1]).nil?
     else
       rook = "\u265C "
-      return false if board.chesspiece[:A8].symbol != rook
+      return false if board.chesspiece[:A8]&.symbol != rook
       rook_didnt_move = board.chesspiece[:A8].rook_moved == nil
 
       rook_didnt_move && (board.chesspiece[:D8] && board.chesspiece[:C8] && board.chesspiece[:B8]).nil?
@@ -141,19 +143,27 @@ class King
     castling_fields = [:G1, :G8, :C1, :C8]
 
     if castling_fields.include?(cell_name) && king_moved == nil
-      #move king
-      #move rook
-      #return
-      
-      @board.board[current_position[0]][current_position[1]] = '  '
-      @board.chesspiece[starting_position_cell] = nil
-      @starting_position_cell = cell_name
-      @current_position = to
+      # cell_name == (:G1 || :G8) ? kingside_selected : queenside_selected
 
-      queen = Queen.new(color, cell_name, @board)
-      @board.chesspiece[cell_name] = queen
-      @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
+      move_king(to, cell_name)
+
+      if cell_name == (:G1 || :G8)
+        move_rook(cell_name, 'kingside')
+      else
+        move_rook(cell_name, 'queenside')
+      end
+      @king_moved = true
       return
+      
+      # @board.board[current_position[0]][current_position[1]] = '  '
+      # @board.chesspiece[starting_position_cell] = nil
+      # @starting_position_cell = cell_name
+      # @current_position = to
+
+      # queen = Queen.new(color, cell_name, @board)
+      # @board.chesspiece[cell_name] = queen
+      # @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
+      # return
     end
 
     @board.board[current_position[0]][current_position[1]] = '  '
@@ -163,5 +173,76 @@ class King
     @board.board[to[0]][to[1]] = symbol
     @board.chesspiece[cell_name] = self
     @king_moved = true
+  end
+
+  def move_king(to, cell_name)
+    @board.board[current_position[0]][current_position[1]] = '  '
+    @board.chesspiece[starting_position_cell] = nil
+    @starting_position_cell = cell_name
+    @current_position = to
+
+    king = King.new(color, cell_name, @board)
+    @board.chesspiece[cell_name] = king
+    @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = king.symbol
+  end
+
+  def move_rook(cell_name, castling_side)
+    white_kingside_rook = @board.chesspiece[:H1]
+    white_queenside_rook = @board.chesspiece[:A1]
+    black_kingside_rook = @board.chesspiece[:H8]
+    black_queenside_rook = @board.chesspiece[:A8]
+
+    if color == 'white'
+      if castling_side == 'kingside'
+        @board.board[7][7] = '  '
+        @board.chesspiece[:H1] = nil
+        white_kingside_rook.starting_position_cell = :F1
+        white_kingside_rook.current_position = [7, 5]
+
+        rook = Rook.new(color, :F1, @board)
+        @board.chesspiece[:F1] = rook
+        @board.board[board.cell_names[white_kingside_rook.starting_position_cell][0]][board.cell_names[white_kingside_rook.starting_position_cell][1]] = rook.symbol
+      else
+        @board.board[7][0] = '  '
+        @board.chesspiece[:A1] = nil
+        white_queenside_rook.starting_position_cell = :D1
+        white_queenside_rook.current_position = [7, 3]
+
+        rook = Rook.new(color, :D1, @board)
+        @board.chesspiece[:D1] = rook
+        @board.board[board.cell_names[white_queenside_rook.starting_position_cell][0]][board.cell_names[white_queenside_rook.starting_position_cell][1]] = rook.symbol
+      end
+    else
+      if castling_side == 'kingside'
+        @board.board[0][7] = '  '
+        @board.chesspiece[:H8] = nil
+        black_kingside_rook.starting_position_cell = :F8
+        black_kingside_rook.current_position = [0, 5]
+
+        rook = Rook.new(color, :F8, @board)
+        @board.chesspiece[:F8] = rook
+        @board.board[board.cell_names[black_kingside_rook.starting_position_cell][0]][board.cell_names[black_kingside_rook.starting_position_cell][1]] = rook.symbol
+      else
+        @board.board[0][0] = '  '
+        @board.chesspiece[:A8] = nil
+        black_queenside_rook.starting_position_cell = :D8
+        black_queenside_rook.current_position = [0, 3]
+        
+        rook = Rook.new(color, :D8, @board)
+        @board.chesspiece[:D8] = rook
+        @board.board[board.cell_names[black_queenside_rook.starting_position_cell][0]][board.cell_names[black_queenside_rook.starting_position_cell][1]] = rook.symbol
+      end
+    end
+
+
+    # moves = {
+    #   :G1 => [7, 5],
+    #   :G8 => [0, 5],
+    #   :C1 => [7, 3],
+    #   :C8 => [0, 5]
+    # }
+
+    # @board.board[]
+
   end
 end
