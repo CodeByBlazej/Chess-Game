@@ -3,6 +3,7 @@ require 'pry-byebug'
 
 class Rook
   attr_reader :color, :symbol, :starting_position_cell, :current_position, :board, :all_moves, :way_to_king, :rook_moved
+  attr_accessor :starting_position_cell, :current_position
 
   def initialize color, starting_position_cell, board
     @board = board
