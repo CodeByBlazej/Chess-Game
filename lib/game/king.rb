@@ -47,7 +47,11 @@ class King
         cell_name = board.cell_names.key([r, c])
         occupant = board.chesspiece[cell_name]
 
-        if occupant.nil? && kingside_castling
+        if occupant.nil? && (kingside_castling && queenside_castling)
+          reachable << [r, c]
+          color == 'white' ? reachable << [7, 2] << [7, 6] : reachable << [0, 2] << [0, 6]
+          break
+        elsif occupant.nil? && kingside_castling
           reachable << [r, c]
           color == 'white' ? reachable << [7, 6] : reachable << [0, 6]
           # reachable << color == 'white' ? [7, 6] : [0, 6]
@@ -80,11 +84,8 @@ class King
     @queenside_castling = nil
   end
 
-  def check_castling #to be fixed as calculates only kingside side and pass queenside
-    kingside_castling_possible?
-    queenside_castling_possible?
-
-    if kingside_castling_possible? && queenside_castling_possible?
+  def check_castling
+    if (kingside_castling_possible? && queenside_castling_possible?)
       @kingside_castling = true
       @queenside_castling = true
     elsif kingside_castling_possible?
@@ -143,11 +144,9 @@ class King
     castling_fields = [:G1, :G8, :C1, :C8]
 
     if castling_fields.include?(cell_name) && king_moved == nil
-      # cell_name == (:G1 || :G8) ? kingside_selected : queenside_selected
-
       move_king(to, cell_name)
 
-      if cell_name == (:G1 || :G8)
+      if cell_name == :G1 || cell_name == :G8
         move_rook(cell_name, 'kingside')
       else
         move_rook(cell_name, 'queenside')
