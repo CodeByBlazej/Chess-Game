@@ -6,6 +6,7 @@ require_relative 'game/bishop'
 require_relative 'game/queen'
 require_relative 'game/king'
 require_relative 'game/pawn'
+require 'json'
 require 'pry-byebug'
 
 class Game
