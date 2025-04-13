@@ -48,6 +48,7 @@ class King
     instance.instance_variable_set(:@king_moved, data['king_moved'])
     instance.instance_variable_set(:@kingside_castling, data['kingside_castling'])
     instance.instance_variable_set(:@queenside_castling, data['queenside_castling'])
+    instance
   end
 
   def available_moves

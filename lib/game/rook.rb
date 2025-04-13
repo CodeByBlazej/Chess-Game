@@ -43,6 +43,7 @@ class Rook
     instance.instance_variable_set(:@all_moves, data['all_moves'])
     instance.instance_variable_set(:@way_to_king, data['way_to_king'])
     instance.instance_variable_set(:@rook_moved, data['rook_moved'])
+    instance
   end
 
   def available_moves

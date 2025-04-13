@@ -39,6 +39,7 @@ class Knight
     instance.instance_variable_set(:@current_position, data['current_position'])
     instance.instance_variable_set(:@all_moves, data['all_moves'])
     instance.instance_variable_set(:@way_to_king, data['way_to_king'])
+    instance
   end
 
   def available_moves
