@@ -16,6 +16,35 @@ class Rook
     @rook_moved = nil
   end
 
+  def as_json
+    {
+      board: @board,
+      color: @color,
+      symbol: @symbol,
+      starting_position_cell: @starting_position_cell,
+      current_position: @current_position,
+      all_moves: @all_moves,
+      way_to_king: @way_to_king,
+      rook_moved: @rook_moved
+    }
+  end
+
+  def to_json(*_args)
+    as_json.to_json
+  end
+
+  def self.from_json(data)
+    instance = new
+    instance.instance_variable_set(:@board, data['board'])
+    instance.instance_variable_set(:@color, data['color'])
+    instance.instance_variable_set(:@symbol, data['symbol'])
+    instance.instance_variable_set(:@starting_position_cell, data['starting_position_cell'])
+    instance.instance_variable_set(:@current_position, data['current_position'])
+    instance.instance_variable_set(:@all_moves, data['all_moves'])
+    instance.instance_variable_set(:@way_to_king, data['way_to_king'])
+    instance.instance_variable_set(:@rook_moved, data['rook_moved'])
+  end
+
   def available_moves
     directions = [
       [-1, 0],

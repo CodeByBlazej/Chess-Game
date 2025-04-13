@@ -18,6 +18,42 @@ class Board
     @white_king_position = nil
   end
 
+  def as_json
+    {
+      board: @board,
+      white: @white,
+      black: @black,
+      cell_names: @cell_names,
+      chesspiece: @chesspiece,
+      black_chesspieces_moves: @black_chesspieces_moves,
+      white_chesspieces_moves: @white_chesspieces_moves,
+      black_king_moves: @black_king_moves,
+      white_king_moves: @white_king_moves,
+      black_king_position: @black_king_position,
+      white_king_position: @white_king_position
+    }
+  end
+
+  def to_json(*_args)
+    as_json.to_json
+  end
+
+  def self.from_json(data)
+    instance = new
+    instance.instance_variable_set(:@board, data['board'])
+    instance.instance_variable_set(:@white, data['white'])
+    instance.instance_variable_set(:@black, data['black'])
+    instance.instance_variable_set(:@cell_names, data['cell_names'])
+    instance.instance_variable_set(:@chesspiece, data['chesspiece'])
+    instance.instance_variable_set(:@black_chesspieces_moves, data['black_chesspieces_moves'])
+    instance.instance_variable_set(:@white_chesspieces_moves, data['white_chesspieces_moves'])
+    instance.instance_variable_set(:@black_king_moves, data['black_king_moves'])
+    instance.instance_variable_set(:@white_king_moves, data['white_king_moves'])
+    instance.instance_variable_set(:@black_king_position, data['black_king_position'])
+    instance.instance_variable_set(:@white_king_position, data['white_king_position'])
+    instance
+  end
+
   def display_board
     name_cells
 
