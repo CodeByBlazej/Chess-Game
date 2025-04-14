@@ -27,6 +27,63 @@ class Game
     @opponent_chesspiece_moves = nil
   end
 
+  def as_json
+    {
+      board: @board.as_json,
+      player1: @player1.as_json,
+      player2: @player2.as_json,
+      white_chesspieces_positions: @white_chesspieces_positions,
+      black_chesspieces_positions: @black_chesspieces_positions,
+      chesspiece_to_move: @chesspiece_to_move,
+      cell_to_go: @cell_to_go,
+      next_turn_player: @next_turn_player&.color,
+      check: @check,
+      defending_chesspieces_cells: @defending_chesspieces_cells,
+      opponent_way_to_king_cells: @opponent_way_to_king_cells,
+      king_escape_moves: @king_escape_moves,
+      king_selected: @king_selected,
+      opponent_chesspiece_moves: @opponent_chesspiece_moves
+    }
+  end
+
+  def to_json(*_args)
+    as_json.to_json
+  end
+
+  def self.from_json(data)
+    instance = new
+    instance.instance_variable_set(:@board, Board.from_json(data['board']))
+    instance.instance_variable_set(:@player1, Players.from_json(data['player1']))
+    instance.instance_variable_set(:@player2, Players.from_json(data['player2']))
+
+    next_turn_player_color = data['next_turn_player_color']
+
+    instance.instance_variable_set(:@next_turn_player,
+    [instance.player1, instance.player2].find { |player| player.color == next_turn_player_color })
+
+    instance.instance_variable_set(:@white_chesspieces_positions, data['white_chesspieces_positions'])
+    instance.instance_variable_set(:@black_chesspieces_positions, data['black_chesspieces_positions'])
+    instance.instance_variable_set(:@chesspiece_to_move, data['chesspiece_to_move'])
+    instance.instance_variable_set(:@cell_to_go, data['cell_to_go'])
+    instance.instance_variable_set(:@check, data['check'])
+    instance.instance_variable_set(:@defending_chesspieces_cells, data['defending_chesspieces_cells'])
+    instance.instance_variable_set(:@opponent_way_to_king_cells, data['opponent_way_to_king_cells'])
+    instance.instance_variable_set(:@king_escape_moves, data['king_escape_moves'])
+    instance.instance_variable_set(:@king_selected, data['king_selected'])
+    instance.instance_variable_set(:@opponent_chesspiece_moves, data['opponent_chesspiece_moves'])
+    
+    instance
+  end
+
+  def save_game(filename)
+    File.open(filename, 'w') { |f| f.write(to_json) }
+  end
+
+  def self.load_game(filename)
+    data = JSON.parse(File.read(filename))
+    from_json(data)
+  end
+
   def play_game
     introduction
     create_players
@@ -399,7 +456,7 @@ class Game
         @defending_chesspieces_cells << object.starting_position_cell
       end
     end
-    # binding.pry
+    binding.pry
     
     puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
