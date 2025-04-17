@@ -203,6 +203,12 @@ class Game
   def pick_chesspiece(player)
     puts "#{player.name} select chesspiece you want to move - for example A1 or E2"
     selected_chesspiece = gets.chomp.to_sym
+    upcased_save = selected_chesspiece.to_s.upcase
+
+    if upcased_save == 'SAVE'
+      save_game('savegame.json')
+      puts "Game has been saved!"
+    end
 
     until can_chesspiece_move?(selected_chesspiece) && board.chesspiece[selected_chesspiece].color == player.color do  
       if board.chesspiece[selected_chesspiece].nil?
@@ -481,14 +487,24 @@ class Game
     puts "king_escape = #{king_escape.flatten(1)}"
   end
 
-  def check
-    
+  def load_game?
+    answer = gets.chomp.upcase
+
+    until answer == 'YES' || answer == 'NO'
+      puts 'You made a typo, please type YES or NO again...'
+      answer = gets.chomp.upcase
+    end
+
+    answer == 'YES' ? true : false
   end
 
   def introduction
     puts <<~HEREDOC
       
     Welcome to the Chess!
+
+    Do you want to load a game?
+    #{load_game?}
 
     If you wish to SAVE the game at any tyme please type SAVE instead of selecting chesspiece you want to move.
 
