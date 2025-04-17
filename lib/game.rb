@@ -490,6 +490,8 @@ class Game
       
     Welcome to the Chess!
 
+    If you wish to SAVE the game at any tyme please type SAVE instead of selecting chesspiece you want to move.
+
     Please select players names!
 
     HEREDOC
