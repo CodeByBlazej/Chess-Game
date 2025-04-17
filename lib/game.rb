@@ -456,7 +456,7 @@ class Game
         @defending_chesspieces_cells << object.starting_position_cell
       end
     end
-    binding.pry
+    # binding.pry
     
     puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
