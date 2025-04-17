@@ -24,7 +24,7 @@ class Board
       white: @white,
       black: @black,
       cell_names: @cell_names,
-      chesspiece: @chesspiece,
+      chesspiece: @chesspiece.transform_values(&:as_json),
       black_chesspieces_moves: @black_chesspieces_moves,
       white_chesspieces_moves: @white_chesspieces_moves,
       black_king_moves: @black_king_moves,
@@ -44,13 +44,29 @@ class Board
     instance.instance_variable_set(:@white, data['white'])
     instance.instance_variable_set(:@black, data['black'])
     instance.instance_variable_set(:@cell_names, data['cell_names'])
-    instance.instance_variable_set(:@chesspiece, data['chesspiece'])
+
+    reconstructed_chesspieces = {}
+    data['chesspiece'].each do |cell, chesspiece_data|
+      type = chesspiece_data['type']
+      reconstructed_chesspieces[cell.to_sym] = 
+        case type
+        when 'rook' then Rook.from_json(chesspiece_data, instance)
+        when 'knight' then Knight.from_json(chesspiece_data, instance)
+        when 'bishop' then Bishop.from_json(chesspiece_data, instance)
+        when 'queen' then Queen.from_json(chesspiece_data, instance)
+        when 'king' then King.from_json(chesspiece_data, instance)
+        when 'pawn' then Pawn.from_json(chesspiece_data, instance)
+        end
+    end
+    instance.instance_variable_set(:@chesspiece, reconstructed_chesspieces)
+
     instance.instance_variable_set(:@black_chesspieces_moves, data['black_chesspieces_moves'])
     instance.instance_variable_set(:@white_chesspieces_moves, data['white_chesspieces_moves'])
     instance.instance_variable_set(:@black_king_moves, data['black_king_moves'])
     instance.instance_variable_set(:@white_king_moves, data['white_king_moves'])
     instance.instance_variable_set(:@black_king_position, data['black_king_position'])
     instance.instance_variable_set(:@white_king_position, data['white_king_position'])
+    
     instance
   end
 

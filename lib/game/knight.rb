@@ -16,7 +16,7 @@ class Knight
 
   def as_json
     {
-      board: @board,
+      type: 'knight',
       color: @color,
       symbol: @symbol,
       starting_position_cell: @starting_position_cell,
@@ -30,12 +30,10 @@ class Knight
     as_json.to_json
   end
 
-  def self.from_json(data)
-    instance = new
-    instance.instance_variable_set(:@board, data['board'])
-    instance.instance_variable_set(:@color, data['color'])
+  def self.from_json(data, board)
+    instance = new(data['color'], data['starting_position_cell'], board)
+    
     instance.instance_variable_set(:@symbol, data['symbol'])
-    instance.instance_variable_set(:@starting_position_cell, data['starting_position_cell'])
     instance.instance_variable_set(:@current_position, data['current_position'])
     instance.instance_variable_set(:@all_moves, data['all_moves'])
     instance.instance_variable_set(:@way_to_king, data['way_to_king'])
