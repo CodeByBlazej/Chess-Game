@@ -24,7 +24,7 @@ class Board
       white: @white,
       black: @black,
       cell_names: @cell_names,
-      chesspiece: @chesspiece.transform_values(&:as_json),
+      chesspiece: @chesspiece.transform_values {|value| value && value.as_json},
       black_chesspieces_moves: @black_chesspieces_moves,
       white_chesspieces_moves: @white_chesspieces_moves,
       black_king_moves: @black_king_moves,
@@ -72,7 +72,7 @@ class Board
 
   def display_board
     name_cells
-
+    # binding.pry
     board.each_with_index do |row, row_idx|
       print "#{8 - row_idx}"
       
