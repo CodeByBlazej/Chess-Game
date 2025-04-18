@@ -110,6 +110,15 @@ class Game
   end
 
   def create_players
+    puts 'Do you want to load a game?'
+    
+    if wish_to_load_game? == true && File.exist?('savegame.json')
+      self.load_game('savegame.json')
+    elsif wish_to_load_game? == true && !File.exist?('savegame.json')
+      puts 'Sorry! There is no saved game, play the new one and type SAVE instead of
+      selecting chesspiece to move in order to save the game...'
+    end
+
     puts 'Player 1, what is your name?'
     @player1_name = gets.chomp
     puts 'Player 2, what is your name?'
@@ -487,7 +496,7 @@ class Game
     puts "king_escape = #{king_escape.flatten(1)}"
   end
 
-  def load_game?
+  def wish_to_load_game?
     answer = gets.chomp.upcase
 
     until answer == 'YES' || answer == 'NO'
@@ -502,9 +511,6 @@ class Game
     puts <<~HEREDOC
       
     Welcome to the Chess!
-
-    Do you want to load a game?
-    #{load_game?}
 
     If you wish to SAVE the game at any tyme please type SAVE instead of selecting chesspiece you want to move.
 
