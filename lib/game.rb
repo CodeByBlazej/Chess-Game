@@ -85,7 +85,8 @@ class Game
   end
 
   def play_game
-    introduction
+    # introduction
+    puts 'Please select players names!'
     create_players
     board.display_board
     create_chesspieces_and_add_to_board('white')
@@ -110,15 +111,6 @@ class Game
   end
 
   def create_players
-    puts 'Do you want to load a game?'
-    
-    if wish_to_load_game? == true && File.exist?('savegame.json')
-      self.load_game('savegame.json')
-    elsif wish_to_load_game? == true && !File.exist?('savegame.json')
-      puts 'Sorry! There is no saved game, play the new one and type SAVE instead of
-      selecting chesspiece to move in order to save the game...'
-    end
-
     puts 'Player 1, what is your name?'
     @player1_name = gets.chomp
     puts 'Player 2, what is your name?'
@@ -217,6 +209,7 @@ class Game
     if upcased_save == 'SAVE'
       save_game('savegame.json')
       puts "Game has been saved!"
+      pick_chesspiece(player)
     end
 
     until can_chesspiece_move?(selected_chesspiece) && board.chesspiece[selected_chesspiece].color == player.color do  
@@ -496,16 +489,16 @@ class Game
     puts "king_escape = #{king_escape.flatten(1)}"
   end
 
-  def wish_to_load_game?
-    answer = gets.chomp.upcase
+  # def wish_to_load_game?
+  #   answer = gets.chomp.upcase
 
-    until answer == 'YES' || answer == 'NO'
-      puts 'You made a typo, please type YES or NO again...'
-      answer = gets.chomp.upcase
-    end
+  #   until answer == 'YES' || answer == 'NO'
+  #     puts 'You made a typo, please type YES or NO again...'
+  #     answer = gets.chomp.upcase
+  #   end
 
-    answer == 'YES' ? true : false
-  end
+  #   answer == 'YES' ? true : false
+  # end
 
   def introduction
     puts <<~HEREDOC
