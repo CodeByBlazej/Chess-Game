@@ -42,7 +42,7 @@ class Game
       opponent_way_to_king_cells: @opponent_way_to_king_cells,
       king_escape_moves: @king_escape_moves,
       king_selected: @king_selected,
-      opponent_chesspiece_moves: @opponent_chesspiece_moves
+      opponent_chesspiece_moves: @opponent_chesspiece_moves,
     }
   end
 
@@ -56,7 +56,7 @@ class Game
     instance.instance_variable_set(:@player1, Players.from_json(data['player1']))
     instance.instance_variable_set(:@player2, Players.from_json(data['player2']))
 
-    next_turn_player_color = data['next_turn_player_color']
+    next_turn_player_color = data['next_turn_player']
 
     instance.instance_variable_set(:@next_turn_player,
     [instance.player1, instance.player2].find { |player| player.color == next_turn_player_color })
@@ -86,28 +86,19 @@ class Game
 
   def play_game
     # introduction
-    puts 'Please select players names!'
-    create_players
-    board.display_board
-    create_chesspieces_and_add_to_board('white')
-    create_chesspieces_and_add_to_board('black')
+    if board.chesspiece.empty?
+      puts 'Please select players names!'
+      create_players
+      board.display_board
+      create_chesspieces_and_add_to_board('white')
+      create_chesspieces_and_add_to_board('black')
+      board.display_board
+    else
+      puts 'Game loaded successfully! Resuming your game...'
+    end
+
     board.display_board
     play_round until end_game
-    # binding.pry
-    # play_round
-    # play_round
-    # play_round
-    # play_round
-
-
-    # board.display_board
-    # play_round until end_game?
-    # in play_game player is asked what chesspiece he picks up
-    # then he he asked where he wants to move
-    # binding.pry
-    # board.chesspiece[:B1].test_display
-    # chesspiece[:G1].test_display
-    # chesspiece[:B8].test_display
   end
 
   def create_players
