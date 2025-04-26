@@ -47,6 +47,8 @@ class Board
 
     reconstructed_chesspieces = {}
     data['chesspiece'].each do |cell, chesspiece_data|
+      next if chesspiece_data.nil?
+      
       type = chesspiece_data['type']
       reconstructed_chesspieces[cell.to_sym] = 
         case type
