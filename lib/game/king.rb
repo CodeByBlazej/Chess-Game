@@ -87,12 +87,10 @@ class King
         elsif occupant.nil? && kingside_castling
           reachable << [r, c]
           color == 'white' ? reachable << [7, 6] : reachable << [0, 6]
-          # reachable << color == 'white' ? [7, 6] : [0, 6]
           break
         elsif occupant.nil? && queenside_castling
           reachable << [r, c]
           color == 'white' ? reachable << [7, 2] : reachable << [0, 2]
-          # reachable << color == 'white' ? [7, 2] : [0, 2]
           break
         elsif occupant.nil?
           reachable << [r, c]
@@ -163,7 +161,6 @@ class King
   def moves(to)
     available_moves
     cell_name = board.cell_names.key(to)
-    binding.pry
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
