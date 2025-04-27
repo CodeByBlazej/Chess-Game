@@ -7,7 +7,6 @@ class Board
     @board = Array.new(8) { Array.new(8, '  ') }
     @white = "\e[0;100m"
     @black = "\e[40m"
-    # @knight = Knight.new('white', "\u2658 ")
     @cell_names = {}
     @chesspiece = {}
     @black_chesspieces_moves = nil
@@ -85,7 +84,7 @@ class Board
 
   def display_board
     name_cells
-    # binding.pry
+
     board.each_with_index do |row, row_idx|
       print "#{8 - row_idx}"
       
@@ -107,7 +106,6 @@ class Board
         cell_names[:"#{alphabet[col_idx]}#{8 - row_idx}"] = [row_idx, col_idx]
       end
     end
-    # puts cell_names
   end
 
   def create_black_chesspieces_moves
@@ -116,13 +114,6 @@ class Board
     black_chesspieces.each { |chesspiece| moves << chesspiece.all_moves }
     
     @black_chesspieces_moves = moves.flatten(1)
-
-    # puts "black_opponent_moves = #{black_opponent_moves.flatten(1)}"
-
-    #finish doing this method and start copying more from game.rb
-    #create class variables and set black_opponent_moves to flatten(1)
-    #call everything nicely in chessmate in game and check if it works
-    #the same like from moves branch
   end
 
   def create_white_chesspieces_moves
@@ -131,8 +122,6 @@ class Board
     white_chesspieces.each { |chesspiece| moves << chesspiece.all_moves }
 
     @white_chesspieces_moves = moves.flatten(1)
-    
-    # puts "white_opponent_moves = #{white_opponent_moves.flatten(1)}" 
   end
 
   def create_black_king_moves
@@ -145,12 +134,9 @@ class Board
 
     @black_king_moves = moves.flatten(1)
     @black_king_position = position.flatten(1)
-
-    # puts "black_king_moves = #{black_king_moves.flatten(1)}"
   end
 
   def create_white_king_moves
-    #update this with find rather than select
     moves = []
     white_king = chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
     white_king.each { |chesspiece| moves << chesspiece.all_moves }
@@ -160,8 +146,5 @@ class Board
 
     @white_king_moves = moves.flatten(1)
     @white_king_position = position.flatten(1)
-
-    # puts "white_king_moves = #{white_king_moves.flatten(1)}"
   end
-
 end
