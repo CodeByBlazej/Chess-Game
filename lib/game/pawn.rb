@@ -16,9 +16,7 @@ class Pawn
 
   def as_json
     {
-      type: 'pawn',
       color: @color,
-      symbol: @symbol,
       starting_position_cell: @starting_position_cell,
       current_position: @current_position,
       all_moves: @all_moves,
@@ -31,13 +29,16 @@ class Pawn
   end
 
   def self.from_json(data, board)
-    instance = new(data['color'], data['starting_position_cell'], board)
+    pawn = allocate
+    pawn.instance_variable_set(:@color, data['color'])
+    pawn.instance_variable_set(:@symbol, data['color'] == "white" ? "\u2659 " : "\u265F ")
+    pawn.instance_variable_set(:@starting_position_cell, data['starting_position_cell'])
+    pawn.instance_variable_set(:@current_position, data['current_position'])
+    pawn.instance_variable_set(:@all_moves, data['all_moves'])
+    pawn.instance_variable_set(:@way_to_king, data['way_to_king'])
+    pawn.instance_variable_set(:@board, board)
     
-    instance.instance_variable_set(:@symbol, data['symbol'])
-    instance.instance_variable_set(:@current_position, data['current_position'])
-    instance.instance_variable_set(:@all_moves, data['all_moves'])
-    instance.instance_variable_set(:@way_to_king, data['way_to_king'])
-    instance
+    pawn
   end
 
   def available_moves
@@ -112,30 +113,59 @@ class Pawn
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
-      return
+      return true
     else
       puts 'You cannot make this move!'
+      return false
     end
   end
+
+  # def chesspiece_moves(to, cell_name)
+  #   old_cell = board.cell_names.key(current_position)
+
+  #   if last_move?(to)
+  #     @board.board[current_position[0]][current_position[1]] = '  '
+
+  #     # @board.chesspiece[starting_position_cell] = nil
+  #     @board.chesspiece.delete(old_cell)
+
+  #     @starting_position_cell = cell_name
+  #     @current_position = to
+
+  #     queen = Queen.new(color, cell_name, @board)
+  #     @board.chesspiece[cell_name] = queen
+  #     @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
+  #     return
+  #   end
+
+  #   @board.board[current_position[0]][current_position[1]] = '  '
+
+  #   # @board.chesspiece[starting_position_cell] = nil
+  #   @board.chesspiece.delete(old_cell)
+
+  #   @starting_position_cell = cell_name
+  #   @current_position = to
+  #   @board.board[to[0]][to[1]] = symbol
+  #   @board.chesspiece[cell_name] = self
+  # end
 
   def chesspiece_moves(to, cell_name)
-    if last_move?(to)
-      @board.board[current_position[0]][current_position[1]] = '  '
-      @board.chesspiece[starting_position_cell] = nil
-      @starting_position_cell = cell_name
-      @current_position = to
-
-      queen = Queen.new(color, cell_name, @board)
-      @board.chesspiece[cell_name] = queen
-      @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
-      return
-    end
-
+    old_cell = board.cell_names.key(current_position)
+  
     @board.board[current_position[0]][current_position[1]] = '  '
-    @board.chesspiece[starting_position_cell] = nil
+    @board.chesspiece.delete(old_cell)
+  
     @starting_position_cell = cell_name
     @current_position = to
-    @board.board[to[0]][to[1]] = symbol
-    @board.chesspiece[cell_name] = self
+  
+    if last_move?(to)
+      queen = Queen.new(color, cell_name, @board)
+      @board.chesspiece[cell_name] = queen
+      @board.board[to[0]][to[1]] = queen.symbol
+    else
+      @board.chesspiece[cell_name] = self
+      @board.board[to[0]][to[1]] = symbol
+    end
   end
+  
 end
