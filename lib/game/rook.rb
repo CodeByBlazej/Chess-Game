@@ -113,5 +113,4 @@ class Rook
     @board.chesspiece[cell_name] = self
     @rook_moved = true
   end
-
 end
