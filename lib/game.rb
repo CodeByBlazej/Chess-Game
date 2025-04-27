@@ -388,7 +388,7 @@ class Game
     
     # puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
-    defending_chesspieces_moves = defending_chesspieces.map(&:all_moves).flatten(1)
+    # defending_chesspieces_moves = defending_chesspieces.map(&:all_moves).flatten(1)
 
     # puts "defending_chesspieces_moves = #{defending_chesspieces_moves}"
     
