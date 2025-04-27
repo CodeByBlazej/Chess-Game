@@ -86,7 +86,6 @@ class Game
   end
 
   def play_game
-    # introduction
     if board.chesspiece.empty?
       puts 'Please select players names!'
       create_players
@@ -231,11 +230,6 @@ class Game
     return false if board.chesspiece[selected_chesspiece].nil?
 
     if @check 
-      # binding.pry
-      #check if selected_chesspiece is in moves allowed to move
-      #(the ones who cut the way or kill attacking chesspiece)
-      #check if selected chesspiece is king and if its got free moves
-      #that are not covered by occupant. if so, allow him to move
       if ["\u2654 ", "\u265A "].include?(board.chesspiece[selected_chesspiece].symbol) && @king_escape_moves.any?
         @king_selected = true
         return true
@@ -268,11 +262,6 @@ class Game
         end
       end
 
-      # @cell_to_go = board.cell_names[selected_cell]
-      # @check = nil
-      # @king_selected = nil
-      # return make_move(player)
-      
     else
       until board.cell_names.keys.any?(selected_cell) do
         puts "You made a typo! Please try again..."
@@ -291,9 +280,6 @@ class Game
       pick_chesspiece(player)
       return
     end
-    # until board.chesspiece[chesspiece_to_move].nil? do
-    #   pick_cell(player)
-    # end
     
     @check = nil
     @king_selected = nil
@@ -303,17 +289,9 @@ class Game
 
   def end_game
     chessmate?
-    # check?
   end
 
   def chessmate?
-    # if next_turn_player.nil?
-    #   return false
-    # else
-    #   color = next_turn_player.color
-    # end
-
-    
     board.chesspiece.values.each { |chesspiece| chesspiece && chesspiece.available_moves }
 
     board.create_black_chesspieces_moves
@@ -322,36 +300,15 @@ class Game
     board.create_white_king_moves
 
 
-    puts "black_chesspieces_moves = #{board.black_chesspieces_moves}"
-    puts "white_chesspieces_moves = #{board.white_chesspieces_moves}" 
-    puts "black_king_moves = #{board.black_king_moves}"
-    puts "white_king_moves = #{board.white_king_moves}"
-    puts "black_king_position = #{board.black_king_position}"
-    puts "white_king_position = #{board.white_king_position}"
+    # puts "black_chesspieces_moves = #{board.black_chesspieces_moves}"
+    # puts "white_chesspieces_moves = #{board.white_chesspieces_moves}" 
+    # puts "black_king_moves = #{board.black_king_moves}"
+    # puts "white_king_moves = #{board.white_king_moves}"
+    # puts "black_king_position = #{board.black_king_position}"
+    # puts "white_king_position = #{board.white_king_position}"
 
     breaks_chessmate?
 
-    # if board.white_king_moves.any?
-    #   if (board.white_king_moves - board.black_chesspieces_moves).empty?
-    #     puts "Chessmate! #{player2.name} won the game!"
-    #     true
-    #   elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
-    #     puts "check!"
-    #     false
-    #   end
-    # end
-
-    # if board.white_king_moves.any? 
-    #   if (board.white_king_moves - board.black_chesspieces_moves).empty?
-    #     puts "Chessmate! #{player2.name} won the game!"
-    #     return true
-    #   elsif board.black_chesspieces_moves.any? { |move| board.white_king_moves.include?(move) }
-    #     puts "check!"
-    #     @check = true
-    #     false
-    #   end
-    # end
-    # binding.pry
     if next_turn_player == player1
       if board.white_king_moves.any? 
         check = opponent_chesspiece_moves.include?(board.white_king_position) && ( defending_chesspieces_cells.any? || king_escape_moves.any? )
@@ -389,70 +346,34 @@ class Game
   end
 
   def breaks_chessmate?
-    #find which opponent chesspieces are able to reach my king
-    #and put their moves into separate variables.
-    #Then check if any of my chesspieces contain these moves
-    #and allow player to use only them to move if its check.
-    
-    #check king position and then find which opponent color conatin it move
     if next_turn_player
       color = next_turn_player.color
       king_symbol = color == 'white' ? "\u2654 " : "\u265A "
     end
 
-    # if board.white_king_moves.any?
-    #   king_color = 'white'
-    #   opponent_color = 'black'
-    #   king_symbol = "\u2654 "
-    # elsif board.black_king_moves.any?
-    #   king_color = 'black'
-    #   opponent_color = 'white'
-    #   king_symbol = "\u265A "
-    # else
-    #   return
-    # end
-
     king_moves = []
-    # white_king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == "\u2654 " }
-    # white_king.each { |chesspiece| moves << chesspiece.all_moves && moves << [chesspiece.current_position] }
+
     king = board.chesspiece.values.select { |chesspiece| chesspiece && chesspiece.symbol == king_symbol }
     king.each { |chesspiece| king_moves << chesspiece.all_moves && king_moves << [chesspiece.current_position] }
 
-    puts " king_moves = #{king_moves}"
-    # opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
-    #   chesspiece && chesspiece.color == 'black' && (chesspiece.all_moves & moves.flatten(1)).any?
-    # end
+    # puts " king_moves = #{king_moves}"
+
     opponent_chesspiece = board.chesspiece.values.select do |chesspiece|
       chesspiece && chesspiece.color != color && (chesspiece.all_moves & king_moves.flatten(1)).any? 
     end
     
     
     @opponent_chesspiece_moves = opponent_chesspiece.map(&:way_to_king).compact.flatten(1)
-    # @opponent_chesspiece_moves = opponent_chesspiece.map { |chesspiece| (chesspiece.way_to_king || []) + [chesspiece.current_position] }.flatten(1)
-    # opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.way_to_king }
 
+    # puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves}" 
 
-    puts "opponent_chesspiece_moves = #{opponent_chesspiece_moves}" 
-    # binding.pry
-    # @opponent_way_to_king_cells = []
-    # board.cell_names.each do |key, value|
-    #   opponent_chesspiece_moves.flatten(1).each do |position|
-    #     @opponent_way_to_king_cells << key if position == value
-    #   end
-    # end
-    
     @opponent_way_to_king_cells = board.cell_names.select do |key, value|
       opponent_chesspiece_moves.include?(value) && !(board.chesspiece[key] && 
       [ "\u2654 ", "\u265A " ].include?(board.chesspiece[key].symbol))
     end.keys
 
+    # puts "opponent_way_to_king_cells = #{opponent_way_to_king_cells}"
 
-    puts "opponent_way_to_king_cells = #{opponent_way_to_king_cells}"
-
-    
-    # defending_chesspieces = board.chesspiece.values.select do |chesspiece|
-    #   chesspiece && chesspiece.color == 'white' && (chesspiece.all_moves & opponent_chesspiece_moves.flatten(1)).any?
-    # end
     defending_chesspieces = board.chesspiece.values.select do |chesspiece|
       chesspiece && chesspiece.color == color && (chesspiece.all_moves & opponent_chesspiece_moves).any?
     end
@@ -464,13 +385,12 @@ class Game
         @defending_chesspieces_cells << object.starting_position_cell
       end
     end
-    # binding.pry
     
-    puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
+    # puts "defending_chesspieces_cells = #{defending_chesspieces_cells}"
 
     defending_chesspieces_moves = defending_chesspieces.map(&:all_moves).flatten(1)
-    # defending_chesspieces.each { |object| defending_chesspieces_moves << object.all_moves }
-    puts "defending_chesspieces_moves = #{defending_chesspieces_moves}"
+
+    # puts "defending_chesspieces_moves = #{defending_chesspieces_moves}"
     
     king_escape = []
     if color == 'white'
@@ -484,9 +404,8 @@ class Game
       king_escape_flattened.include?(value)
     end.keys
     
-    # @king_escape_moves = king_escape.flatten(1)
-    puts "king_escape_moves = #{@king_escape_moves}"
-    puts "king_escape = #{king_escape.flatten(1)}"
+    # puts "king_escape_moves = #{@king_escape_moves}"
+    # puts "king_escape = #{king_escape.flatten(1)}"
   end
 
 
