@@ -341,10 +341,6 @@ class Game
 
   end
 
-  def check?
-    return true if @check == true
-  end
-
   def breaks_chessmate?
     if next_turn_player
       color = next_turn_player.color
