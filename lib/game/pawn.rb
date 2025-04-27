@@ -120,35 +120,6 @@ class Pawn
     end
   end
 
-  # def chesspiece_moves(to, cell_name)
-  #   old_cell = board.cell_names.key(current_position)
-
-  #   if last_move?(to)
-  #     @board.board[current_position[0]][current_position[1]] = '  '
-
-  #     # @board.chesspiece[starting_position_cell] = nil
-  #     @board.chesspiece.delete(old_cell)
-
-  #     @starting_position_cell = cell_name
-  #     @current_position = to
-
-  #     queen = Queen.new(color, cell_name, @board)
-  #     @board.chesspiece[cell_name] = queen
-  #     @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
-  #     return
-  #   end
-
-  #   @board.board[current_position[0]][current_position[1]] = '  '
-
-  #   # @board.chesspiece[starting_position_cell] = nil
-  #   @board.chesspiece.delete(old_cell)
-
-  #   @starting_position_cell = cell_name
-  #   @current_position = to
-  #   @board.board[to[0]][to[1]] = symbol
-  #   @board.chesspiece[cell_name] = self
-  # end
-
   def chesspiece_moves(to, cell_name)
     old_cell = board.cell_names.key(current_position)
   
@@ -167,5 +138,4 @@ class Pawn
       @board.board[to[0]][to[1]] = symbol
     end
   end
-  
 end
