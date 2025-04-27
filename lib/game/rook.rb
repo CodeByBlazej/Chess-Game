@@ -18,9 +18,7 @@ class Rook
 
   def as_json
     {
-      type: 'rook',
       color: @color,
-      symbol: @symbol,
       starting_position_cell: @starting_position_cell,
       current_position: @current_position,
       all_moves: @all_moves,
@@ -34,14 +32,16 @@ class Rook
   end
 
   def self.from_json(data, board)
-    instance = new(data['color'], data['starting_position_cell'], board)
-
-    instance.instance_variable_set(:@symbol, data['symbol'])
-    instance.instance_variable_set(:@current_position, data['current_position'])
-    instance.instance_variable_set(:@all_moves, data['all_moves'])
-    instance.instance_variable_set(:@way_to_king, data['way_to_king'])
-    instance.instance_variable_set(:@rook_moved, data['rook_moved'])
-    instance
+    rook = allocate
+    rook.instance_variable_set(:@color, data['color'])
+    rook.instance_variable_set(:@symbol, data['color'] == "white" ? "\u2656 " : "\u265C ")
+    rook.instance_variable_set(:@starting_position_cell, data['starting_position_cell'])
+    rook.instance_variable_set(:@current_position, data['current_position'])
+    rook.instance_variable_set(:@all_moves, data['all_moves'])
+    rook.instance_variable_set(:@way_to_king, data['way_to_king'])
+    rook.instance_variable_set(:@board, board)
+    
+    rook
   end
 
   def available_moves
@@ -95,15 +95,18 @@ class Rook
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
-      return
+      return true
     else
       puts 'You cannot make this move!'
+      return false
     end
   end
 
   def chesspiece_moves(to, cell_name)
+    old_cell = board.cell_names.key(current_position)
+
     @board.board[current_position[0]][current_position[1]] = '  '
-    @board.chesspiece[starting_position_cell] = nil
+    @board.chesspiece.delete(old_cell)
     @starting_position_cell = cell_name
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
