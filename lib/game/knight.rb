@@ -16,9 +16,7 @@ class Knight
 
   def as_json
     {
-      type: 'knight',
       color: @color,
-      symbol: @symbol,
       starting_position_cell: @starting_position_cell,
       current_position: @current_position,
       all_moves: @all_moves,
@@ -31,13 +29,16 @@ class Knight
   end
 
   def self.from_json(data, board)
-    instance = new(data['color'], data['starting_position_cell'], board)
+    knight = allocate
+    knight.instance_variable_set(:@color, data['color'])
+    knight.instance_variable_set(:@symbol, data['color'] == "white" ? "\u2658 " : "\u265E ")
+    knight.instance_variable_set(:@starting_position_cell, data['starting_position_cell'])
+    knight.instance_variable_set(:@current_position, data['current_position'])
+    knight.instance_variable_set(:@all_moves, data['all_moves'])
+    knight.instance_variable_set(:@way_to_king, data['way_to_king'])
+    knight.instance_variable_set(:@board, board)
     
-    instance.instance_variable_set(:@symbol, data['symbol'])
-    instance.instance_variable_set(:@current_position, data['current_position'])
-    instance.instance_variable_set(:@all_moves, data['all_moves'])
-    instance.instance_variable_set(:@way_to_king, data['way_to_king'])
-    instance
+    knight
   end
 
   def available_moves
@@ -83,15 +84,18 @@ class Knight
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
-      return
+      return true
     else
       puts 'You cannot make this move!'
+      return false
     end
   end
 
   def chesspiece_moves(to, cell_name)
+    old_cell = board.cell_names.key(current_position)
+
     @board.board[current_position[0]][current_position[1]] = '  '
-    @board.chesspiece[starting_position_cell] = nil
+    @board.chesspiece.delete(old_cell)
     @starting_position_cell = cell_name
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
