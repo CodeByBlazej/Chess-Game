@@ -19,9 +19,7 @@ class King
 
   def as_json
     {
-      type: 'king',
       color: @color,
-      symbol: @symbol,
       starting_position_cell: @starting_position_cell,
       current_position: @current_position,
       all_moves: @all_moves,
@@ -37,16 +35,19 @@ class King
   end
 
   def self.from_json(data, board)
-    instance = new(data['color'], data['starting_position_cell'], board)
-
-    instance.instance_variable_set(:@symbol, data['symbol'])
-    instance.instance_variable_set(:@current_position, data['current_position'])
-    instance.instance_variable_set(:@all_moves, data['all_moves'])
-    instance.instance_variable_set(:@way_to_king, data['way_to_king'])
-    instance.instance_variable_set(:@king_moved, data['king_moved'])
-    instance.instance_variable_set(:@kingside_castling, data['kingside_castling'])
-    instance.instance_variable_set(:@queenside_castling, data['queenside_castling'])
-    instance
+    king = allocate
+    king.instance_variable_set(:@color, data['color'])
+    king.instance_variable_set(:@symbol, data['color'] == "white" ? "\u2654 " : "\u265A ")
+    king.instance_variable_set(:@starting_position_cell, data['starting_position_cell'])
+    king.instance_variable_set(:@current_position, data['current_position'])
+    king.instance_variable_set(:@all_moves, data['all_moves'])
+    king.instance_variable_set(:@way_to_king, data['way_to_king'])
+    king.instance_variable_set(:@king_moved, data['king_moved'])
+    king.instance_variable_set(:@kingside_castling, data['kingside_castling'])
+    king.instance_variable_set(:@queenside_castling, data['queenside_castling'])
+    king.instance_variable_set(:@board, board)
+    
+    king
   end
 
   def available_moves
@@ -166,9 +167,10 @@ class King
 
     if all_moves.any?(to)
       chesspiece_moves(to, cell_name)
-      return
+      return true
     else
       puts 'You cannot make this move!'
+      return false
     end
   end
 
@@ -185,20 +187,12 @@ class King
       end
       @king_moved = true
       return
-      
-      # @board.board[current_position[0]][current_position[1]] = '  '
-      # @board.chesspiece[starting_position_cell] = nil
-      # @starting_position_cell = cell_name
-      # @current_position = to
-
-      # queen = Queen.new(color, cell_name, @board)
-      # @board.chesspiece[cell_name] = queen
-      # @board.board[board.cell_names[cell_name][0]][board.cell_names[cell_name][1]] = queen.symbol
-      # return
     end
 
+    old_cell = board.cell_names.key(current_position)
+
     @board.board[current_position[0]][current_position[1]] = '  '
-    @board.chesspiece[starting_position_cell] = nil
+    @board.chesspiece.delete(old_cell)
     @starting_position_cell = cell_name
     @current_position = to
     @board.board[to[0]][to[1]] = symbol
@@ -207,8 +201,10 @@ class King
   end
 
   def move_king(to, cell_name)
+    old_cell = board.cell_names.key(current_position)
+
     @board.board[current_position[0]][current_position[1]] = '  '
-    @board.chesspiece[starting_position_cell] = nil
+    @board.chesspiece.delete(old_cell)
     @starting_position_cell = cell_name
     @current_position = to
 
@@ -226,7 +222,7 @@ class King
     if color == 'white'
       if castling_side == 'kingside'
         @board.board[7][7] = '  '
-        @board.chesspiece[:H1] = nil
+        @board.chesspiece.delete(:H1)
         white_kingside_rook.starting_position_cell = :F1
         white_kingside_rook.current_position = [7, 5]
 
@@ -235,7 +231,7 @@ class King
         @board.board[board.cell_names[white_kingside_rook.starting_position_cell][0]][board.cell_names[white_kingside_rook.starting_position_cell][1]] = rook.symbol
       else
         @board.board[7][0] = '  '
-        @board.chesspiece[:A1] = nil
+        @board.chesspiece.delete(:A1)
         white_queenside_rook.starting_position_cell = :D1
         white_queenside_rook.current_position = [7, 3]
 
@@ -246,7 +242,7 @@ class King
     else
       if castling_side == 'kingside'
         @board.board[0][7] = '  '
-        @board.chesspiece[:H8] = nil
+        @board.chesspiece.delete(:H8)
         black_kingside_rook.starting_position_cell = :F8
         black_kingside_rook.current_position = [0, 5]
 
@@ -255,7 +251,7 @@ class King
         @board.board[board.cell_names[black_kingside_rook.starting_position_cell][0]][board.cell_names[black_kingside_rook.starting_position_cell][1]] = rook.symbol
       else
         @board.board[0][0] = '  '
-        @board.chesspiece[:A8] = nil
+        @board.chesspiece.delete(:A8)
         black_queenside_rook.starting_position_cell = :D8
         black_queenside_rook.current_position = [0, 3]
         
@@ -264,16 +260,5 @@ class King
         @board.board[board.cell_names[black_queenside_rook.starting_position_cell][0]][board.cell_names[black_queenside_rook.starting_position_cell][1]] = rook.symbol
       end
     end
-
-
-    # moves = {
-    #   :G1 => [7, 5],
-    #   :G8 => [0, 5],
-    #   :C1 => [7, 3],
-    #   :C8 => [0, 5]
-    # }
-
-    # @board.board[]
-
   end
 end
