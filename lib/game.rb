@@ -71,9 +71,10 @@ class Game
     instance.instance_variable_set(:@king_escape_moves, data['king_escape_moves'])
     instance.instance_variable_set(:@king_selected, data['king_selected'])
     instance.instance_variable_set(:@opponent_chesspiece_moves, data['opponent_chesspiece_moves'])
-    
+
     instance
   end
+
 
   def save_game(filename)
     File.open(filename, 'w') { |f| f.write(to_json) }
@@ -267,15 +268,16 @@ class Game
         end
       end
 
-      @cell_to_go = board.cell_names[selected_cell]
-      @check = nil
-      @king_selected = nil
-      return make_move(player)
-    end
-
-    until board.cell_names.keys.any?(selected_cell) do
-      puts "You made a typo! Please try again..."
-      selected_cell = gets.chomp.to_sym
+      # @cell_to_go = board.cell_names[selected_cell]
+      # @check = nil
+      # @king_selected = nil
+      # return make_move(player)
+      
+    else
+      until board.cell_names.keys.any?(selected_cell) do
+        puts "You made a typo! Please try again..."
+        selected_cell = gets.chomp.to_sym
+      end
     end
 
     @cell_to_go = board.cell_names[selected_cell]
@@ -283,11 +285,18 @@ class Game
   end
 
   def make_move(player)
-    board.chesspiece[chesspiece_to_move].moves(cell_to_go)
+    success = board.chesspiece[chesspiece_to_move].moves(cell_to_go)
 
-    until board.chesspiece[chesspiece_to_move].nil? do
-      pick_cell(player)
+    unless success
+      pick_chesspiece(player)
+      return
     end
+    # until board.chesspiece[chesspiece_to_move].nil? do
+    #   pick_cell(player)
+    # end
+    
+    @check = nil
+    @king_selected = nil
 
     board.display_board
   end
@@ -418,7 +427,7 @@ class Game
     end
     
     
-    @opponent_chesspiece_moves = opponent_chesspiece.map(&:way_to_king).flatten(1)
+    @opponent_chesspiece_moves = opponent_chesspiece.map(&:way_to_king).compact.flatten(1)
     # @opponent_chesspiece_moves = opponent_chesspiece.map { |chesspiece| (chesspiece.way_to_king || []) + [chesspiece.current_position] }.flatten(1)
     # opponent_chesspiece.each { |object| opponent_chesspiece_moves << object.way_to_king }
 
@@ -480,16 +489,6 @@ class Game
     puts "king_escape = #{king_escape.flatten(1)}"
   end
 
-  # def wish_to_load_game?
-  #   answer = gets.chomp.upcase
-
-  #   until answer == 'YES' || answer == 'NO'
-  #     puts 'You made a typo, please type YES or NO again...'
-  #     answer = gets.chomp.upcase
-  #   end
-
-  #   answer == 'YES' ? true : false
-  # end
 
   def introduction
     puts <<~HEREDOC
