@@ -29,6 +29,7 @@ describe Game do
     let(:board_obj) { Board.new }
 
     before do
+      game.instance_variable_set(:@board, board_obj)
       allow(game).to receive(:board).and_return(board_obj)
 
       allow(Rook).to receive(:new).and_return(rook)
@@ -40,25 +41,27 @@ describe Game do
 
       game.instance_variable_set(:@chesspiece, {})
 
-      game.instance_variable_set(:@white_chesspieces_positions, {:rook => [:A1, :H1],
+      game.instance_variable_set(:@white_chesspieces_positions, {
+      :rook => [:A1, :H1],
       :knight => [:B1, :G1],
       :bishop => [:C1, :F1],
       :queen => [:D1],
       :king => [:E1],
-      :pawn => [:A2, :B2, :C2, :D2, :E2, :F2, :G2, :H2]})
+      :pawn => [:A2, :B2, :C2, :D2, :E2, :F2, :G2, :H2]
+      })
     end
 
     it 'calls Rook.new when creating WHITE pieces' do
       board_obj.name_cells
 
-      expect(Rook).to receive(:new).with('white', :A1).at_least(:once)
+      expect(Rook).to receive(:new).with('white', :A1, board_obj).at_least(:once)
       game.create_chesspieces_and_add_to_board('white')
     end
 
     it 'calls Queen.new when creating WHITE pieces' do
       board_obj.name_cells
 
-      expect(Queen).to receive(:new).with('white', :D1).at_least(:once)
+      expect(Queen).to receive(:new).with('white', :D1, board_obj).at_least(:once)
       game.create_chesspieces_and_add_to_board('white')
     end
 
@@ -111,8 +114,30 @@ describe Game do
   end
 
   describe '#play_round' do
-    it 'asks the player with white color to pick chesspiece he wants to move' do
-      expect(game).to receive(:puts).with('Player')
+    let(:player1) { player1 }
+    let(:player2) { player2 }
+
+    before do
+      game.instance_variable_set(:@player1, player1)
+      game.instance_variable_set(:@player2, player2)
+    end
+
+    context 'when it is 1st round' do
+      it 'checks if next_turn_player is nil' do
+        expect(game.instance_variable_get(:@next_turn_player)).to eq(nil)
+      end
+      
+      it 'calls #pick_chesspiece with player1' do
+        expect(game).to receive(pick_chesspiece).with(player1)
+        game.play_round
+      end
+    end
+
+    context 'when next_turn_player is player1' do
+      
+      xit 'calls pick_chesspiece(player1) and set next_turn_player to player2' do
+        expect(game).to receive(:puts).with('Player')
+      end
     end
   end
 
