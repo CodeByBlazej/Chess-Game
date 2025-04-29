@@ -161,5 +161,33 @@ describe Game do
     end
   end
 
+  describe '#pick_chesspiece' do
+    let(:board) { Board.new }
+    let(:game) { Game.new }
+    let(:player) { instance_double(Players, name: 'Rob', color: 'white') }
+    let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :A1, board: board) }
+
+    before do
+      game.instance_variable_set(:@board, board)
+      allow(game).to receive(:puts)
+      allow(game).to receive(:save_game)
+      allow(game).to receive(:pick_cell)
+
+      board.chesspiece[:A1] = pawn
+
+      allow(game).to receive(:can_chesspiece_move?).and_return(false)
+      allow(game).to receive(:can_chesspiece_move?).with(:A1).and_return(true)
+
+      allow(game).to receive(:gets).and_return('SAVE', 'A1')
+    end
+
+    it 'loops until valid, handles SAVE and sets chesspiece_to_move' do
+      expect(game).to receive(:save_game).with('savegame.json')
+      expect(game).to receive(:pick_cell).with(player)
+      game.pick_chesspiece(player)
+      expect(game.chesspiece_to_move).to eq(:A1)
+    end
+  end
+
 
 end
