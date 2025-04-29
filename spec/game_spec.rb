@@ -114,8 +114,8 @@ describe Game do
   end
 
   describe '#play_round' do
-    let(:player1) { player1 }
-    let(:player2) { player2 }
+    let(:player1) { instance_double(Players, color: 'white', name: 'Alice') }
+    let(:player2) { instance_double(Players, color: 'black', name: 'Rob') }
 
     before do
       game.instance_variable_set(:@player1, player1)
@@ -128,15 +128,35 @@ describe Game do
       end
       
       it 'calls #pick_chesspiece with player1' do
-        expect(game).to receive(pick_chesspiece).with(player1)
+        expect(game).to receive(:pick_chesspiece).with(player1)
         game.play_round
+      end
+
+      it 'then switches next_turn_player to player2' do
+        allow(game).to receive(:pick_chesspiece)
+        game.play_round
+        expect(game.next_turn_player).to eq(player2)
       end
     end
 
-    context 'when next_turn_player is player1' do
-      
-      xit 'calls pick_chesspiece(player1) and set next_turn_player to player2' do
-        expect(game).to receive(:puts).with('Player')
+    context 'when it is 2nd round' do
+      before do
+        game.instance_variable_set(:@next_turn_player, player2)
+        allow(game).to receive(:pick_chesspiece)
+      end
+
+      it 'checks if next_turn_player is player2' do
+        expect(game.instance_variable_get(:@next_turn_player)).to eq(player2) 
+      end
+
+      it 'calls #pick_chesspiece with player2' do
+        expect(game).to receive(:pick_chesspiece).with(player2)
+        game.play_round
+      end
+
+      it 'then switches next_turn_player to player1' do
+        game.play_round
+        expect(game.next_turn_player).to eq(player1)
       end
     end
   end
