@@ -189,5 +189,63 @@ describe Game do
     end
   end
 
+  describe '#can_chesspiece_move?' do
+    let(:board) { Board.new }
+    let(:game) { Game.new }
+    let(:king) { instance_double(King, color: 'white', starting_position_cell: :E1, symbol: "\u2654 ") }
+    let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :E2, symbol: "\u2659 ") }
+    let(:queen) { instance_double(Queen, color: 'white', starting_position_cell: :D1, symbol: "\u2655 ") }
+
+
+    context 'there is CHECK and player picked KING that has escape moves available' do
+      before do
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@check, true)
+        
+        board.chesspiece[:E1] = king
+        
+        game.instance_variable_set(:@king_escape_moves, [[7, 4]])
+      end
+      
+      it 'returns true and marks @king_selected' do
+        result = game.can_chesspiece_move?(:E1)
+        expect(result).to be true
+        expect(game.instance_variable_get(:@king_selected)).to be true
+      end
+    end
+
+    context 'there is CHECK and player picked PAWN that protects the KING' do
+      before do
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@check, true)
+
+        board.chesspiece[:E2] = pawn
+
+        game.instance_variable_set(:@defending_chesspieces_cells, [:E2])
+      end
+
+      it 'returns true' do
+        result = game.can_chesspiece_move?(:E2)
+        expect(result).to be true
+      end
+    end
+
+    context 'there is NO CHECK and player picked QUEEN that is free to move' do
+      before do
+        game.instance_variable_set(:@board, board)
+        
+        board.chesspiece[:D1] = queen
+
+        allow(board.chesspiece[:D1]).to receive(:available_moves).and_return(true)
+        allow(board.chesspiece[:D1]).to receive(:all_moves).and_return([[7, 3]])
+      end
+
+      it 'returns true' do
+        result = game.can_chesspiece_move?(:D1)
+        expect(result).to be true
+      end
+    end
+  end
+
 
 end
