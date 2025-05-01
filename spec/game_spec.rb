@@ -230,6 +230,22 @@ describe Game do
       end
     end
 
+    context 'there is CHECK and player picked PAWN that cannot move' do
+      before do
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@check, true)
+
+        board.chesspiece[:E2] = pawn
+
+        game.instance_variable_set(:@defending_chesspieces_cells, [])
+      end
+
+      it 'returns false' do
+        result = game.can_chesspiece_move?(:E2)
+        expect(result).to be false
+      end
+    end
+
     context 'there is NO CHECK and player picked QUEEN that is free to move' do
       before do
         game.instance_variable_set(:@board, board)
@@ -243,6 +259,19 @@ describe Game do
       it 'returns true' do
         result = game.can_chesspiece_move?(:D1)
         expect(result).to be true
+      end
+    end
+
+    context 'player made mistake and put number of cell that is empty' do
+      before do
+        game.instance_variable_set(:@board, board)
+
+        board.chesspiece[:A2] = nil
+      end
+
+      it 'returns false' do
+        result = game.can_chesspiece_move?(:A2)
+        expect(result).to be false
       end
     end
   end
