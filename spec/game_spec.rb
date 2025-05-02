@@ -395,5 +395,48 @@ describe Game do
     end
   end
 
+  describe '#make_move' do
+    let(:player) { instance_double(Players, name: 'Rob', color: 'white') }
+    let(:board) { Board.new }
+    let(:game) { Game.new }
+    let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :E2, symbol: "\u2659 ") }
+
+    context 'player picked the right chesspiece that can make move' do
+      before do
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@chesspiece_to_move, :A2)
+        game.instance_variable_set(:@cell_to_go, board.cell_names[:A3])
+        board.chesspiece[:A2] = pawn 
+        allow(pawn).to receive(:moves).with(board.cell_names[:A3]).and_return(true)
+        game.instance_variable_set(:@check, true)
+        game.instance_variable_set(:@king_selected, true)
+      end
+
+      it 'makes move, set @check and @king_selected to nil and displays board' do
+        expect(board).to receive(:display_board)
+        game.make_move(player)
+        expect(game.instance_variable_get(:@check)).to be_nil
+        expect(game.instance_variable_get(:@king_selected)).to be_nil
+      end
+    end
+
+    context 'player picked wrong cell' do
+      before do
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@chesspiece_to_move, :A2)
+        game.instance_variable_set(:@cell_to_go, board.cell_names[:A7])
+        board.chesspiece[:A2] = pawn
+        allow(pawn).to receive(:moves).with(board.cell_names[:A7]).and_return(false)
+        game.instance_variable_set(:@check, true)
+        game.instance_variable_set(:@king_selected, true)
+      end
+
+      it 'calls #pick_chesspiece' do
+        expect(game).to receive(:pick_chesspiece).with(player)
+        game.make_move(player)
+      end
+    end
+  end
+
 
 end
