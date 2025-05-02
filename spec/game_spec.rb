@@ -334,6 +334,65 @@ describe Game do
         expect(game.cell_to_go).to eq(board.cell_names[:A2])
       end
     end
+
+    context "there is CHECK, player has king selected and king DOESN'T HAVE cells to escape" do
+      before do
+        board.name_cells
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets).and_return('A1', 'A2')
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@check, true)
+        game.instance_variable_set(:@opponent_way_to_king_cells, [])
+        game.instance_variable_set(:@king_selected, true)
+        game.instance_variable_set(:@king_escape_moves, [:A2])
+        allow(game).to receive(:make_move).with(player)
+      end
+
+      it 'prompts player to pick another cell' do
+        expect(game).to receive(:puts).with("You can't move there to escape from check! Select safe field!").once
+        game.pick_cell(player)
+        expect(game.cell_to_go).to eq(board.cell_names[:A2])
+      end
+    end
+
+    context "there is NO CHECK, and player picks cell that DOESN'T exist" do
+      before do
+        board.name_cells
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets).and_return('A9', 'B10', 'A2')
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@check, nil)
+        game.instance_variable_set(:@opponent_way_to_king_cells, [])
+        game.instance_variable_set(:@king_selected, nil)
+        game.instance_variable_set(:@king_escape_moves, [:A2])
+        allow(game).to receive(:make_move).with(player)
+      end
+
+      it 'prompts player to pick another cell TWICE' do
+        expect(game).to receive(:puts).with("You made a typo! Please try again...").twice
+        game.pick_cell(player)
+        expect(game.cell_to_go).to eq(board.cell_names[:A2])
+      end
+    end
+
+    context 'there is NO CHECK, and player picks available cell right away' do
+      before do
+        board.name_cells
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets).and_return('A2')
+        game.instance_variable_set(:@board, board)
+        game.instance_variable_set(:@check, nil)
+        game.instance_variable_set(:@opponent_way_to_king_cells, [])
+        game.instance_variable_set(:@king_selected, nil)
+        game.instance_variable_set(:@king_escape_moves, [])
+        allow(game).to receive(:make_move).with(player)
+      end
+
+      it 'calls make_move and set @cell_to_go' do
+        game.pick_cell(player)
+        expect(game.cell_to_go).to eq(board.cell_names[:A2])
+      end
+    end
   end
 
 
