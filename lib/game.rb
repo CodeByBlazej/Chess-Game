@@ -315,10 +315,10 @@ class Game
         checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
   
         if checkmate
-          puts "Chessmate! #{player2.name} won the game!"
+          puts "Checkmate! #{player2.name} won the game!"
           return true
         elsif check
-          puts "check!"
+          puts "Check!"
           @check = true
           false
         end
@@ -329,10 +329,10 @@ class Game
         checkmate = (board.black_king_moves - board.white_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
   
         if checkmate
-          puts "Chessmate! #{player1.name} won the game!"
+          puts "Checkmate! #{player1.name} won the game!"
           return true
         elsif check
-          puts "check!"
+          puts "Check!"
           @check = true
           false
         end
