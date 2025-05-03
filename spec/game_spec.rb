@@ -450,7 +450,7 @@ describe Game do
         allow(board).to receive(:create_white_chesspieces_moves)
         allow(board).to receive(:create_black_king_moves)
         allow(board).to receive(:create_white_king_moves)
-        allow(game).to receive(:breaks_chessmate?)
+        allow(game).to receive(:prepare_check_data)
 
         game.instance_variable_set(:@next_turn_player, player1)
         game.instance_variable_set(:@player1, player1)
@@ -481,7 +481,7 @@ describe Game do
         allow(board).to receive(:create_white_chesspieces_moves)
         allow(board).to receive(:create_black_king_moves)
         allow(board).to receive(:create_white_king_moves)
-        allow(game).to receive(:breaks_chessmate?)
+        allow(game).to receive(:prepare_check_data)
 
         game.instance_variable_set(:@next_turn_player, player1)
         game.instance_variable_set(:@player1, player1)
