@@ -288,10 +288,10 @@ class Game
   end
 
   def end_game
-    chessmate?
+    checkmate?
   end
 
-  def chessmate?
+  def checkmate?
     board.chesspiece.values.each { |chesspiece| chesspiece && chesspiece.available_moves }
 
     board.create_black_chesspieces_moves

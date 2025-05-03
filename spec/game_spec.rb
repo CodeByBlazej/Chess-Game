@@ -468,7 +468,7 @@ describe Game do
 
       it "it prompts 'check!', sets @check to true and returns false" do
         expect(game).to receive(:puts).with("check!")
-        result = game.chessmate?
+        result = game.checkmate?
         expect(result).to eq(false)
         expect(game.instance_variable_get(:@check)).to eq(true)
       end 
@@ -501,7 +501,7 @@ describe Game do
 
       it "it prompts 'Chessmate! player2.name won the game!'and returns true" do
         expect(game).to receive(:puts).with("Chessmate! #{player2.name} won the game!")
-        result = game.chessmate?
+        result = game.checkmate?
         expect(result).to eq(true)
       end
     end
