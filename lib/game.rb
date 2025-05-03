@@ -307,7 +307,7 @@ class Game
     # puts "black_king_position = #{board.black_king_position}"
     # puts "white_king_position = #{board.white_king_position}"
 
-    breaks_chessmate?
+    prepare_check_data
 
     if next_turn_player == player1
       if board.white_king_moves.any? 
@@ -341,7 +341,7 @@ class Game
 
   end
 
-  def breaks_chessmate?
+  def prepare_check_data
     if next_turn_player
       color = next_turn_player.color
       king_symbol = color == 'white' ? "\u2654 " : "\u265A "
