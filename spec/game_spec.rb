@@ -162,9 +162,7 @@ describe Game do
 
   describe '#pick_chesspiece' do
     let(:board) { Board.new }
-    let(:game) { Game.new }
     let(:player) { instance_double(Players, name: 'Rob', color: 'white') }
-    let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :A1, board: board) }
 
     before do
       game.instance_variable_set(:@board, board)
@@ -190,11 +188,6 @@ describe Game do
 
   describe '#can_chesspiece_move?' do
     let(:board) { Board.new }
-    let(:game) { Game.new }
-    let(:king) { instance_double(King, color: 'white', starting_position_cell: :E1, symbol: "\u2654 ") }
-    let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :E2, symbol: "\u2659 ") }
-    let(:queen) { instance_double(Queen, color: 'white', starting_position_cell: :D1, symbol: "\u2655 ") }
-
 
     context 'There is CHECK and player picked KING that has escape moves available' do
       before do
@@ -278,7 +271,6 @@ describe Game do
   describe '#pick_cell' do
     let(:player) { instance_double(Players, name: 'Rob', color: 'white') }
     let(:board) { Board.new }
-    let(:game) { Game.new }
 
     context 'There is CHECK and player picks cell that block CHECK' do
       before do
@@ -397,8 +389,6 @@ describe Game do
   describe '#make_move' do
     let(:player) { instance_double(Players, name: 'Rob', color: 'white') }
     let(:board) { Board.new }
-    let(:game) { Game.new }
-    let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :E2, symbol: "\u2659 ") }
 
     context 'Player picked the right chesspiece that can make move' do
       before do
@@ -439,7 +429,6 @@ describe Game do
 
   describe '#chessmate?' do
     let(:board) { Board.new }
-    let(:game) { Game.new }
     let(:player1) { instance_double(Players, name: 'Rob', color: 'white') }
     let(:player2) { instance_double(Players, name: 'Tom', color: 'black') }
 
