@@ -89,7 +89,6 @@ describe Game do
   end
 
   describe '#create_chesspieces_positions' do
-    
     it 'creates hash with keys of the WHITE piece name and values of board cell name' do
       hash = {:rook => [:A1, :H1],
               :knight => [:B1, :G1],
@@ -122,7 +121,7 @@ describe Game do
       game.instance_variable_set(:@player2, player2)
     end
 
-    context 'when it is 1st round' do
+    context 'When it is 1st round' do
       it 'checks if next_turn_player is nil' do
         expect(game.instance_variable_get(:@next_turn_player)).to eq(nil)
       end
@@ -139,7 +138,7 @@ describe Game do
       end
     end
 
-    context 'when it is 2nd round' do
+    context 'When it is 2nd round' do
       before do
         game.instance_variable_set(:@next_turn_player, player2)
         allow(game).to receive(:pick_chesspiece)
@@ -197,7 +196,7 @@ describe Game do
     let(:queen) { instance_double(Queen, color: 'white', starting_position_cell: :D1, symbol: "\u2655 ") }
 
 
-    context 'there is CHECK and player picked KING that has escape moves available' do
+    context 'There is CHECK and player picked KING that has escape moves available' do
       before do
         game.instance_variable_set(:@board, board)
         game.instance_variable_set(:@check, true)
@@ -214,7 +213,7 @@ describe Game do
       end
     end
 
-    context 'there is CHECK and player picked PAWN that protects the KING' do
+    context 'There is CHECK and player picked PAWN that protects the KING' do
       before do
         game.instance_variable_set(:@board, board)
         game.instance_variable_set(:@check, true)
@@ -230,7 +229,7 @@ describe Game do
       end
     end
 
-    context 'there is CHECK and player picked PAWN that cannot move' do
+    context 'There is CHECK and player picked PAWN that cannot move' do
       before do
         game.instance_variable_set(:@board, board)
         game.instance_variable_set(:@check, true)
@@ -246,7 +245,7 @@ describe Game do
       end
     end
 
-    context 'there is NO CHECK and player picked QUEEN that is free to move' do
+    context 'There is NO CHECK and player picked QUEEN that is free to move' do
       before do
         game.instance_variable_set(:@board, board)
         
@@ -262,7 +261,7 @@ describe Game do
       end
     end
 
-    context 'player made mistake and put number of cell that is empty' do
+    context 'Player made mistake and put number of cell that is empty' do
       before do
         game.instance_variable_set(:@board, board)
 
@@ -281,7 +280,7 @@ describe Game do
     let(:board) { Board.new }
     let(:game) { Game.new }
 
-    context 'there is CHECK and player picks cell that block CHECK' do
+    context 'There is CHECK and player picks cell that block CHECK' do
       before do
         board.name_cells
         allow(game).to receive(:puts)
@@ -298,7 +297,7 @@ describe Game do
       end
     end
 
-    context "there is CHECK and player picks cell that DOESN'T block CHECK" do
+    context "There is CHECK and player picks cell that DOESN'T block CHECK" do
       before do
         board.name_cells
         allow(game).to receive(:puts)
@@ -316,7 +315,7 @@ describe Game do
       end
     end
 
-    context "there is CHECK, player has king selected and king HAS cells to escape" do
+    context "There is CHECK, player has king selected and king HAS cells to escape" do
       before do
         board.name_cells
         allow(game).to receive(:puts)
@@ -335,7 +334,7 @@ describe Game do
       end
     end
 
-    context "there is CHECK, player has king selected and king DOESN'T HAVE cells to escape" do
+    context "There is CHECK, player has king selected and king DOESN'T HAVE cells to escape" do
       before do
         board.name_cells
         allow(game).to receive(:puts)
@@ -355,7 +354,7 @@ describe Game do
       end
     end
 
-    context "there is NO CHECK, and player picks cell that DOESN'T exist" do
+    context "There is NO CHECK, and player picks cell that DOESN'T exist" do
       before do
         board.name_cells
         allow(game).to receive(:puts)
@@ -375,7 +374,7 @@ describe Game do
       end
     end
 
-    context 'there is NO CHECK, and player picks available cell right away' do
+    context 'There is NO CHECK, and player picks available cell right away' do
       before do
         board.name_cells
         allow(game).to receive(:puts)
@@ -401,7 +400,7 @@ describe Game do
     let(:game) { Game.new }
     let(:pawn) { instance_double(Pawn, color: 'white', starting_position_cell: :E2, symbol: "\u2659 ") }
 
-    context 'player picked the right chesspiece that can make move' do
+    context 'Player picked the right chesspiece that can make move' do
       before do
         game.instance_variable_set(:@board, board)
         game.instance_variable_set(:@chesspiece_to_move, :A2)
@@ -420,7 +419,7 @@ describe Game do
       end
     end
 
-    context 'player picked wrong cell' do
+    context 'Player picked wrong cell' do
       before do
         game.instance_variable_set(:@board, board)
         game.instance_variable_set(:@chesspiece_to_move, :A2)
@@ -434,6 +433,76 @@ describe Game do
       it 'calls #pick_chesspiece' do
         expect(game).to receive(:pick_chesspiece).with(player)
         game.make_move(player)
+      end
+    end
+  end
+
+  describe '#chessmate?' do
+    let(:board) { Board.new }
+    let(:game) { Game.new }
+    let(:player1) { instance_double(Players, name: 'Rob', color: 'white') }
+    let(:player2) { instance_double(Players, name: 'Tom', color: 'black') }
+
+    context "It's player1 turn and there is check" do
+      before do
+        game.instance_variable_set(:@board, board)
+        allow(board).to receive(:create_black_chesspieces_moves)
+        allow(board).to receive(:create_white_chesspieces_moves)
+        allow(board).to receive(:create_black_king_moves)
+        allow(board).to receive(:create_white_king_moves)
+        allow(game).to receive(:breaks_chessmate?)
+
+        game.instance_variable_set(:@next_turn_player, player1)
+        game.instance_variable_set(:@player1, player1)
+
+        allow(board).to receive(:white_king_moves).and_return([[6, 4]])
+        allow(board).to receive(:black_chesspieces_moves).and_return([])
+        allow(board).to receive(:white_king_position).and_return([7, 4])
+
+        allow(game).to receive(:opponent_chesspiece_moves).and_return([[7, 4]])
+
+        game.instance_variable_set(:@defending_chesspieces_cells, [:F2])
+        
+        game.instance_variable_set(:@check, nil)
+      end
+
+      it "it prompts 'check!', sets @check to true and returns false" do
+        expect(game).to receive(:puts).with("check!")
+        result = game.chessmate?
+        expect(result).to eq(false)
+        expect(game.instance_variable_get(:@check)).to eq(true)
+      end 
+    end
+
+    context "It's player1 turn and there is check mate" do
+      before do
+        game.instance_variable_set(:@board, board)
+        allow(board).to receive(:create_black_chesspieces_moves)
+        allow(board).to receive(:create_white_chesspieces_moves)
+        allow(board).to receive(:create_black_king_moves)
+        allow(board).to receive(:create_white_king_moves)
+        allow(game).to receive(:breaks_chessmate?)
+
+        game.instance_variable_set(:@next_turn_player, player1)
+        game.instance_variable_set(:@player1, player1)
+        game.instance_variable_set(:@player2, player2)
+
+        allow(board).to receive(:white_king_moves).and_return([[6, 4]])
+        allow(board).to receive(:black_chesspieces_moves).and_return([[6, 4]])
+
+        allow(board).to receive(:white_king_position).and_return([7, 4])
+
+        allow(game).to receive(:opponent_chesspiece_moves).and_return([[]])
+        allow(game).to receive(:king_escape_moves).and_return([])
+        game.instance_variable_set(:@defending_chesspieces_cells, [])
+        
+        game.instance_variable_set(:@check, nil)
+      end
+
+      it "it prompts 'Chessmate! player2.name won the game!'and returns true" do
+        expect(game).to receive(:puts).with("Chessmate! #{player2.name} won the game!")
+        result = game.chessmate?
+        expect(result).to eq(true)
       end
     end
   end
