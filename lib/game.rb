@@ -341,6 +341,8 @@ class Game
 
   end
 
+  private
+
   def prepare_check_data
     if next_turn_player
       color = next_turn_player.color
