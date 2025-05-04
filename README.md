@@ -1,14 +1,14 @@
-Chess GamePrerequisites
+**Chess Game**
 
 A command‑line Chess game implemented in Ruby, completed as the final project in The Odin Project.
 
 Challenge yourself with a full two‑player chess experience in your terminal.
 
-Prerequisites
+**Prerequisites**
 
 - Ruby 2.7 or higher installed on your system.
 
-Installation & Usage
+**Installation & Usage**
 
 1. Clone the repository:
 
