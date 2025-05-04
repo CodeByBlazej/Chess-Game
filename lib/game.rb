@@ -405,19 +405,4 @@ class Game
     # puts "king_escape_moves = #{@king_escape_moves}"
     # puts "king_escape = #{king_escape.flatten(1)}"
   end
-
-
-  def introduction
-    intro = <<~HEREDOC
-      
-      Welcome to the Chess!
-
-      If you wish to SAVE the game at any tyme please type SAVE instead of selecting chesspiece you want to move.
-
-      Please select players names!
-
-    HEREDOC
-
-    puts intro.colorize(:red)
-  end
 end
