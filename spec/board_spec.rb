@@ -58,11 +58,11 @@ describe Board do
     end
   end
 
-  describe 'create_black_king_moves' do
+  describe '#create_black_king_moves' do
     let(:board) { Board.new }
-    let(:piece1) { instance_double('Piece', symbol: "\u265A ", all_moves: [[6, 5], [6, 6]], current_position: [[7, 5]]) }
-    let(:piece2) { instance_double('Piece', symbol: "\u265B ", all_moves: [[4, 3]], current_position: [[3, 2]]) }
-    let(:piece3) { instance_double('Piece', symbol: "\u265C ", all_moves: [[1, 1]], current_position: [[2, 2]]) }
+    let(:piece1) { instance_double('Piece', symbol: "\u265A ", all_moves: [[0, 5], [1, 4]], current_position: [[0, 4]]) }
+    let(:piece2) { instance_double('Piece', symbol: "\u265B ", all_moves: [[3, 0], [3, 1]], current_position: [[3, 2]]) }
+    let(:piece3) { instance_double('Piece', symbol: "\u265C ", all_moves: [[0, 1]], current_position: [[0, 0]]) }
 
     before do
       board.chesspiece[:X] = piece1
@@ -72,8 +72,27 @@ describe Board do
     end
 
     it 'collects only BLACK king moves and position flattened' do
-      expect(board.black_king_moves).to match_array([[6, 5], [6, 6]])
-      expect(board.black_king_position).to match_array([[7, 5]])
+      expect(board.black_king_moves).to match_array([[0, 5], [1, 4]])
+      expect(board.black_king_position).to match_array([[0, 4]])
+    end
+  end
+
+  describe '#create_white_king_moves' do
+    let(:board) { Board.new }
+    let(:piece1) { instance_double('Piece', symbol: "\u2654 ", all_moves: [[6, 3], [7, 3]], current_position: [[7, 4]]) }
+    let(:piece2) { instance_double('Piece', symbol: "\u2655 ", all_moves: [[4, 2], [3, 2]], current_position: [[5, 2]]) }
+    let(:piece3) { instance_double('Piece', symbol: "\u2656 ", all_moves: [[6, 0]], current_position: [[7, 0]]) }
+
+    before do
+      board.chesspiece[:X] = piece1
+      board.chesspiece[:Y] = piece2
+      board.chesspiece[:Z] = piece3
+      board.create_white_king_moves
+    end
+
+    it 'collects only WHITE king moves and position flattened' do
+      expect(board.white_king_moves).to match_array([[6, 3], [7, 3]])
+      expect(board.white_king_position).to match_array([[7, 4]])
     end
   end
 end
