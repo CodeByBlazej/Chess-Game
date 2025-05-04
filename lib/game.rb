@@ -89,10 +89,8 @@ class Game
     if board.chesspiece.empty?
       puts 'Please select players names!'
       create_players
-      board.display_board
       create_chesspieces_and_add_to_board('white')
       create_chesspieces_and_add_to_board('black')
-      board.display_board
     else
       puts 'Game loaded successfully! Resuming your game...'
     end
@@ -118,6 +116,7 @@ class Game
   end
 
   def create_chesspieces_and_add_to_board(color)
+    board.name_cells
     create_chesspieces_positions(color)
 
     color == 'white' ? col_pos = white_chesspieces_positions : col_pos = black_chesspieces_positions
