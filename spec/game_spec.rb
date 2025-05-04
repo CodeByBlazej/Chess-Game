@@ -301,7 +301,7 @@ describe Game do
       end
 
       it 'prompts player to pick another cell' do
-        expect(game).to receive(:puts).with('You have to pick the field that would block your king! Please select another one...').once
+        expect(game).to receive(:puts).with('You have to pick the field that would block your king! Please select another one...'.colorize(:yellow)).once
         game.pick_cell(player)
         expect(game.cell_to_go).to eq(board.cell_names[:A1])
       end
@@ -340,7 +340,7 @@ describe Game do
       end
 
       it 'prompts player to pick another cell' do
-        expect(game).to receive(:puts).with("You can't move there to escape from check! Select safe field!").once
+        expect(game).to receive(:puts).with("You can't move there to escape from check! Select safe field!".colorize(:yellow)).once
         game.pick_cell(player)
         expect(game.cell_to_go).to eq(board.cell_names[:A2])
       end
@@ -360,7 +360,7 @@ describe Game do
       end
 
       it 'prompts player to pick another cell TWICE' do
-        expect(game).to receive(:puts).with("You made a typo! Please try again...").twice
+        expect(game).to receive(:puts).with("You made a typo! Please try again...".colorize(:black).colorize(:background => :red)).twice
         game.pick_cell(player)
         expect(game.cell_to_go).to eq(board.cell_names[:A2])
       end
@@ -456,7 +456,7 @@ describe Game do
       end
 
       it "it prompts 'Check!', sets @check to true and returns false" do
-        expect(game).to receive(:puts).with("Check!")
+        expect(game).to receive(:puts).with("Check!".colorize(:red).colorize(:background => :yellow))
         result = game.checkmate?
         expect(result).to eq(false)
         expect(game.instance_variable_get(:@check)).to eq(true)
@@ -489,7 +489,7 @@ describe Game do
       end
 
       it "it prompts 'Checkmate! player2.name won the game!'and returns true" do
-        expect(game).to receive(:puts).with("Checkmate! #{player2.name} won the game!")
+        expect(game).to receive(:puts).with("Checkmate! #{player2.name} won the game!".colorize(:red).colorize(:background => :yellow))
         result = game.checkmate?
         expect(result).to eq(true)
       end
