@@ -6,6 +6,7 @@ require_relative 'game/bishop'
 require_relative 'game/queen'
 require_relative 'game/king'
 require_relative 'game/pawn'
+require 'colorize'
 require 'json'
 require 'pry-byebug'
 
@@ -100,18 +101,18 @@ class Game
   end
 
   def create_players
-    puts 'Player 1, what is your name?'
+    puts 'Player 1, what is your name?'.colorize(:yellow)
     @player1_name = gets.chomp
-    puts 'Player 2, what is your name?'
+    puts 'Player 2, what is your name?'.colorize(:yellow)
     @player2_name = gets.chomp
 
     name = [player1_name, player2_name].sample
 
     name_of_player1 = name
     name_of_player2 = name == player1_name ? player2_name : player1_name
-    puts "Player - #{name_of_player1} got assigned WHITE color"
+    puts "Player - #{name_of_player1} got assigned WHITE color".colorize(:green)
     @player1 = Players.new(name_of_player1, 'white')
-    puts "Player - #{name_of_player2} got assigned BLACK color"
+    puts "Player - #{name_of_player2} got assigned BLACK color".colorize(:green)
     @player2 = Players.new(name_of_player2, 'black')
   end
 
@@ -192,31 +193,31 @@ class Game
   end
 
   def pick_chesspiece(player)
-    puts "#{player.name} select chesspiece you want to move - for example A1 or E2"
+    puts "#{player.name} select chesspiece you want to move - for example A1 or E2".colorize(:green)
     selected_chesspiece = gets.chomp.to_sym
     upcased_save = selected_chesspiece.to_s.upcase
 
     if upcased_save == 'SAVE'
       save_game('savegame.json')
-      puts "Game has been saved!"
+      puts "Game has been saved!".colorize(:blue)
       pick_chesspiece(player)
     end
 
     until can_chesspiece_move?(selected_chesspiece) && board.chesspiece[selected_chesspiece].color == player.color do  
       if board.chesspiece[selected_chesspiece].nil?
-        puts "You made a typo! Please try again..."
+        puts "You made a typo! Please try again...".colorize(:black).colorize(:background => :red)
         selected_chesspiece = gets.chomp.to_sym
       elsif can_chesspiece_move?(selected_chesspiece) == false && @check
-        puts "You have check! Pick such a chesspiece that will rescue your king!"
+        puts "You have check! Pick such a chesspiece that will rescue your king!".colorize(:yellow)
         selected_chesspiece = gets.chomp.to_sym
       elsif can_chesspiece_move?(selected_chesspiece) == false && board.chesspiece[selected_chesspiece].color != player.color
-        puts "You cannot move your opponent chesspieces! Select one of yours..."
+        puts "You cannot move your opponent chesspieces! Select one of yours...".colorize(:yellow)
         selected_chesspiece = gets.chomp.to_sym
       elsif can_chesspiece_move?(selected_chesspiece) == false
-        puts "This chesspiece has no moves available at this moment, select another one..."
+        puts "This chesspiece has no moves available at this moment, select another one...".colorize(:yellow)
         selected_chesspiece = gets.chomp.to_sym
       elsif board.chesspiece[selected_chesspiece].color != player.color
-        puts "You cannot move your opponent chesspieces! Select one of yours..."
+        puts "You cannot move your opponent chesspieces! Select one of yours...".colorize(:yellow)
         selected_chesspiece = gets.chomp.to_sym
       end
     end
@@ -245,25 +246,25 @@ class Game
   end
 
   def pick_cell(player)
-    puts "#{player.name} select field you want to go - for example B3 or F4"
+    puts "#{player.name} select field you want to go - for example B3 or F4".colorize(:green)
     selected_cell = gets.chomp.to_sym
 
     if @check
       until @opponent_way_to_king_cells.any?(selected_cell) || @king_selected do
-        puts "You have to pick the field that would block your king! Please select another one..."
+        puts "You have to pick the field that would block your king! Please select another one...".colorize(:yellow)
         selected_cell = gets.chomp.to_sym
       end
 
       if @king_selected
         until king_escape_moves.any?(selected_cell) do
-          puts "You can't move there to escape from check! Select safe field!"
+          puts "You can't move there to escape from check! Select safe field!".colorize(:yellow)
           selected_cell = gets.chomp.to_sym
         end
       end
 
     else
       until board.cell_names.keys.any?(selected_cell) do
-        puts "You made a typo! Please try again..."
+        puts "You made a typo! Please try again...".colorize(:black).colorize(:background => :red)
         selected_cell = gets.chomp.to_sym
       end
     end
@@ -314,10 +315,10 @@ class Game
         checkmate = (board.white_king_moves - board.black_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
   
         if checkmate
-          puts "Checkmate! #{player2.name} won the game!"
+          puts "Checkmate! #{player2.name} won the game!".colorize(:red).colorize(:background => :yellow)
           return true
         elsif check
-          puts "Check!"
+          puts "Check!".colorize(:red).colorize(:background => :yellow)
           @check = true
           false
         end
@@ -328,10 +329,10 @@ class Game
         checkmate = (board.black_king_moves - board.white_chesspieces_moves).empty? && defending_chesspieces_cells.empty? && king_escape_moves.empty?
   
         if checkmate
-          puts "Checkmate! #{player1.name} won the game!"
+          puts "Checkmate! #{player1.name} won the game!".colorize(:red).colorize(:background => :yellow)
           return true
         elsif check
-          puts "Check!"
+          puts "Check!".colorize(:red).colorize(:background => :yellow)
           @check = true
           false
         end
@@ -407,14 +408,16 @@ class Game
 
 
   def introduction
-    puts <<~HEREDOC
+    intro = <<~HEREDOC
       
-    Welcome to the Chess!
+      Welcome to the Chess!
 
-    If you wish to SAVE the game at any tyme please type SAVE instead of selecting chesspiece you want to move.
+      If you wish to SAVE the game at any tyme please type SAVE instead of selecting chesspiece you want to move.
 
-    Please select players names!
+      Please select players names!
 
     HEREDOC
+
+    puts intro.colorize(:red)
   end
 end
