@@ -526,5 +526,4 @@ describe Game do
       expect(game2.board.chesspiece[:A2].symbol).to eq(game.board.chesspiece[:A2].symbol)
     end
   end
-
 end
