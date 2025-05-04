@@ -100,7 +100,6 @@ describe Board do
     let(:board) do
       Board.new.tap do |b|
         b.name_cells
-        # put a rook and a pawn on two squares
         b.chesspiece[:A1] = Rook.new('black', :A1, b)
         b.chesspiece[:H2] = Pawn.new('white', :H2, b)
         b.board[b.cell_names[:A1][0]][b.cell_names[:A1][1]] = b.chesspiece[:A1].symbol
@@ -108,25 +107,21 @@ describe Board do
       end
     end
 
-    it 'to_json → from_json reconstructs the grid and the pieces' do
+    it 'to_json -> from_json reconstructs the grid and the pieces' do
       json_str = board.to_json
-      hash     = JSON.parse(json_str)
+      hash = JSON.parse(json_str)
 
       board2 = Board.from_json(hash)
   
-      # 1. same raw board array
       expect(board2.board).to eq(board.board)
   
-      # 2. same cell_names mapping
       expect(board2.cell_names).to eq(board.cell_names)
   
-        # 3. two pieces in the same places
       expect(board2.chesspiece[:A1].class).to be(Rook)
       expect(board2.chesspiece[:A1].color).to eq('black')
       expect(board2.chesspiece[:H2].class).to be(Pawn)
       expect(board2.chesspiece[:H2].color).to eq('white')
   
-      # 4. the back‐pointer to board is reset
       expect(board2.chesspiece[:A1].board).to be(board2)
       expect(board2.chesspiece[:H2].board).to be(board2)
     end
