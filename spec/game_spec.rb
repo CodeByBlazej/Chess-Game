@@ -496,5 +496,35 @@ describe Game do
     end
   end
 
+  describe 'JSON round trip' do
+    let(:game) do
+      g = Game.new
+
+      g.instance_variable_set(:@player1, Players.new("Alice", "white"))
+      g.instance_variable_set(:@player2, Players.new("Bob", "black"))
+      g.instance_variable_set(:@next_turn_player, g.player1)
+      g.board.name_cells
+
+      pawn = Pawn.new("white", :A2, g.board)
+      g.board.chesspiece[:A2] = pawn
+      g.board.board[g.board.cell_names[:A2][0]][g.board.cell_names[:A2][1]] = pawn.symbol
+      g
+    end
+
+    it 'to_json -> from_json yields an equivalent Game state' do
+      json_str = game.to_json
+      hash     = JSON.parse(json_str)
+
+      game2 = Game.from_json(hash)
+
+      expect(game2.player1.name).to eq(game.player1.name)
+      expect(game2.player2.color).to eq(game.player2.color)
+
+      expect(game2.next_turn_player.color).to eq(game.next_turn_player.color)
+
+      expect(game2.board.board).to eq(game.board.board)
+      expect(game2.board.chesspiece[:A2].symbol).to eq(game.board.chesspiece[:A2].symbol)
+    end
+  end
 
 end
